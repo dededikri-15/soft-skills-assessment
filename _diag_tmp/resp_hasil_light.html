@@ -1,0 +1,162 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hasil - Soft Skills Assessment</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="http://localhost:8080/soft-skills-assessment/assets/css/style.css">
+</head>
+<body>
+
+    <section class="screen result-screen">
+        <div class="container">
+
+            <div class="result-header">
+                <span class="badge">ASSESSMENT RESULT</span>
+                <h1>Hasil Assessment</h1>
+                <p id="resultStudent">Preview Responsif • PREVRESP01                                            &nbsp;&bull;&nbsp; Token: EQ2026B                                    </p>
+            </div>
+
+            <p class="disclaimer">
+                Hasil berikut merupakan <strong>hasil asesmen</strong>, bukan diagnosis
+                psikologis. Gambaran disusun berdasarkan jawaban yang diberikan peserta
+                dan dapat digunakan sebagai bahan refleksi serta
+                <strong>Modul 5 Core Competency</strong>.
+            </p>
+
+            <div class="personality-card">
+                <div>
+                    <div class="type-code" id="personalityCode">ISTP</div>
+                    <div class="type-label" id="personalityLabel">Introverted – Sensing – Thinking – Perceiving</div>
+                </div>
+                <div>
+                    <h2 id="personalityTitle">The Practical Problem Solver</h2>
+                    <p id="personalityDescription">Cenderung tenang, praktis, mandiri, fleksibel, dan suka menyelesaikan masalah secara langsung.</p>
+                </div>
+            </div>
+
+            <div class="dimension-grid">
+                <div class="dimension">
+                    <div class="dimension-name">ENERGY</div>
+                    <div class="dimension-value" id="eiValue">0% Introvert</div>
+                    <div class="dimension-bar"><div class="dimension-fill" id="eiBar" style="width:0%"></div></div>
+                </div>
+                <div class="dimension">
+                    <div class="dimension-name">INFORMATION</div>
+                    <div class="dimension-value" id="snValue">0% Sensing</div>
+                    <div class="dimension-bar"><div class="dimension-fill" id="snBar" style="width:0%"></div></div>
+                </div>
+                <div class="dimension">
+                    <div class="dimension-name">DECISION</div>
+                    <div class="dimension-value" id="tfValue">0% Thinking</div>
+                    <div class="dimension-bar"><div class="dimension-fill" id="tfBar" style="width:0%"></div></div>
+                </div>
+                <div class="dimension">
+                    <div class="dimension-name">LIFESTYLE</div>
+                    <div class="dimension-value" id="jpValue">0% Perceiving</div>
+                    <div class="dimension-bar"><div class="dimension-fill" id="jpBar" style="width:0%"></div></div>
+                </div>
+            </div>
+
+            <div class="result-grid">
+                <div class="result-card">
+                    <h3>Profil Soft Skills</h3>
+
+                    <div class="skill">
+                        <div class="skill-top"><span>Interpersonal</span><span id="interpersonalScore">0%</span></div>
+                        <div class="skill-bar"><div class="skill-fill" id="interpersonalBar" style="width:0%"></div></div>
+                    </div>
+
+                    <div class="skill">
+                        <div class="skill-top"><span>Communication</span><span id="communicationScore">0%</span></div>
+                        <div class="skill-bar"><div class="skill-fill" id="communicationBar" style="width:0%"></div></div>
+                    </div>
+
+                    <div class="skill">
+                        <div class="skill-top"><span>Emotional Intelligence</span><span id="emotionalScore">0%</span></div>
+                        <div class="skill-bar"><div class="skill-fill" id="emotionalBar" style="width:0%"></div></div>
+                    </div>
+                </div>
+
+                <div class="result-card">
+                    <h3>Radar Chart</h3>
+                    <div class="radar-box">
+                        <canvas id="radarChart"></canvas>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-card" style="margin-top:20px;">
+                <h3>Gambaran Kepribadian</h3>
+                <p style="line-height:1.8;color:#686b7b;">Kecenderungan ISTP biasanya terlihat dari kemampuan mengamati masalah secara praktis dan mencari solusi yang dapat langsung diterapkan.</p>
+            </div>
+
+            <div class="result-card" style="margin-top:20px;">
+                <h3>Kelebihan dan Hal yang Perlu Dikembangkan</h3>
+                <div class="pros-cons">
+                    <div class="pros">
+                        <h4>&#10003; Kelebihan</h4>
+                        <ul>
+                                                            <li>Praktis</li>
+                                                            <li>Mandiri</li>
+                                                            <li>Tenang menghadapi masalah</li>
+                                                            <li>Fleksibel</li>
+                                                    </ul>
+                    </div>
+                    <div class="cons">
+                        <h4>&#9651; Hal yang Perlu Dikembangkan</h4>
+                        <ul>
+                                                            <li>Kurang menyukai aturan yang terlalu ketat</li>
+                                                            <li>Dapat kurang ekspresif</li>
+                                                            <li>Kadang terlalu fokus pada solusi</li>
+                                                            <li>Dapat kehilangan minat terhadap rutinitas</li>
+                                                    </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="result-card" style="margin-top:20px;">
+                <h3>Rekomendasi Pengembangan</h3>
+                <div class="development">Latih komunikasi interpersonal dan kemampuan menjelaskan proses berpikir kepada orang lain.</div>
+            </div>
+
+            <div class="result-actions">
+                <button class="btn btn-primary" style="width:auto;" onclick="window.print()">Cetak Hasil</button>
+            </div>
+
+        </div>
+    </section>
+
+    <script>
+    const skillData = {
+        interpersonal: 0,
+        communication: 0,
+        emotional: 0    };
+
+    const ctx = document.getElementById('radarChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'radar',
+        data: {
+            labels: ['Interpersonal', 'Communication', 'Emotional Intelligence'],
+            datasets: [{
+                label: 'Soft Skills',
+                data: [skillData.interpersonal, skillData.communication, skillData.emotional],
+                backgroundColor: 'rgba(91, 91, 214, 0.2)',
+                borderColor: 'rgba(91, 91, 214, 1)',
+                borderWidth: 2,
+                pointRadius: 4
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                r: { min: 0, max: 100, ticks: { stepSize: 20 } }
+            },
+            plugins: { legend: { display: false } }
+        }
+    });
+    </script>
+</body>
+</html>
