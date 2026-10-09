@@ -32,6 +32,22 @@ if ((int) $sesi['sisa_detik'] <= 0) {
     exit;
 }
 
+/* ---------------------------------------------------------- acak ulang
+ * POST ujian.php (aksi=acak): buang jawaban + paket lama, lalu kembali
+ * ke ujian.php supaya soal & urutan opsi diacak ulang.
+ * (Dulu berdiri sendiri di peserta/acak_paket.php.)
+ * -------------------------------------------------------------------- */
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && ($_POST['aksi'] ?? '') === 'acak') {
+    $stmt = $db->prepare('DELETE FROM jawaban_peserta WHERE sesi_id = ?');
+    $stmt->execute([$_SESSION['sesi_id']]);
+
+    unset($_SESSION['soal_ids'], $_SESSION['opsi_urut']);
+    $_SESSION['acak_paket'] = ((int) ($_SESSION['acak_paket'] ?? 0)) + 1;
+
+    header('Location: ujian.php?acak=1');
+    exit;
+}
+
 /**
  * Jumlah soal unik (teks berbeda) yang aktif & punya pilihan jawaban.
  * Dipakai untuk membatasi jumlah soal bila bank soal kurang dari 60.

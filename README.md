@@ -21,9 +21,23 @@ Aplikasi ini dibangun menggunakan **PHP Native**, **MySQL**, dan **Apache** mela
 ## Menjalankan Aplikasi
 
 1. Buka Laragon, kemudian klik **Start All**.
-2. Buka aplikasi melalui browser: `http://localhost/soft-skills-assessment/`
-3. Halaman peserta: `http://localhost/soft-skills-assessment/peserta/login.php`
-4. Halaman admin: `http://localhost/soft-skills-assessment/admin/login.php`
+2. Buka aplikasi melalui browser: `http://localhost:8080/soft-skills-assessment/`
+3. Halaman peserta: `http://localhost:8080/soft-skills-assessment/peserta/login.php`
+4. Halaman admin: `http://localhost:8080/soft-skills-assessment/admin/login.php`
+
+> Sesuaikan port bila Apache berjalan pada port lain (misalnya `http://localhost/soft-skills-assessment/` untuk port 80).
+
+---
+
+## Status Pengembangan
+
+| Bagian | Status |
+|---|---|
+| Alur peserta (login → instruksi → ujian → submit → hasil) | **Selesai**, terhubung database. |
+| `admin/bank_soal.php` (tambah, edit, aktif/nonaktif, hapus, cari soal) | **Selesai**, terhubung database. |
+| `admin/login.php`, `admin/dashboard.php`, `admin/token.php`, `admin/hasil.php` | **Kerangka dasar** — tampilan dan alur halaman sudah ada, akses database/auth masih ditandai `TODO` di dalam file. |
+
+Sisi peserta sudah berjalan penuh, sedangkan penjaga session admin (`if (!isset($_SESSION['admin']))`) belum diaktifkan karena halaman login admin belum memverifikasi password.
 
 ---
 
@@ -41,20 +55,14 @@ soft-skills-assessment/
 │   ├── ujian.php
 │   ├── proses_jawaban.php
 │   ├── submit.php
-│   ├── acak_paket.php
 │   ├── logout.php
 │   └── hasil.php
 ├── admin/
 │   ├── login.php
 │   ├── dashboard.php
 │   ├── bank_soal.php
-│   ├── tambah_soal.php
-│   ├── edit_bank_soal.php
-│   ├── hapus_bank_soal.php
 │   ├── token.php
-│   ├── tambah_token.php
-│   ├── hasil.php
-│   └── detail_hasil.php
+│   └── hasil.php
 ├── assets/
 │   ├── partials/
 │   │   ├── head.php
@@ -79,6 +87,84 @@ soft-skills-assessment/
 
 *Catatan: Struktur di atas merupakan gambaran direktori utama aplikasi.*
 
+### Satu file, banyak mode (query string)
+
+Agar jumlah file tidak meledak, tiap file menangani beberapa layar lewat query string — tampilan tiap layar tetap sama:
+
+| File | Mode |
+|---|---|
+| `admin/bank_soal.php` | daftar · `?tambah=1` · `?edit=<id>` · `?hapus=<id>` |
+| `admin/token.php` | daftar · `?tambah=1` |
+| `admin/hasil.php` | daftar · `?detail=<id>` |
+| `peserta/ujian.php` | ujian · POST `aksi=acak` (acak ulang paket) |
+
+### Isi setiap file
+
+**Akar proyek**
+
+| File | Fungsi |
+|---|---|
+| `index.php` | Pintu masuk; mengarahkan ke halaman login peserta. |
+| `README.md` | Dokumentasi proyek ini. |
+
+**`config/` — logika bersama**
+
+| File | Fungsi |
+|---|---|
+| `database.php` | Koneksi PDO ke MySQL (`getDB()`), mulai session, helper kecil. |
+| `saran.php` | `build_saran()` — merangkai kartu saran personal di halaman hasil (maks 3 kartu, masing-masing maks 3 langkah). |
+
+**`admin/` — 5 file**
+
+| File | Fungsi |
+|---|---|
+| `login.php` | Login admin. |
+| `dashboard.php` | Ringkasan statistik (peserta, sesi, soal, token). |
+| `bank_soal.php` | Daftar + pencarian/filter soal, tambah, edit, aktif/nonaktif, dan hapus soal (4 mode dalam satu file, lihat tabel di atas). |
+| `token.php` | Daftar token ujian dan pembuatan token baru. |
+| `hasil.php` | Daftar hasil ujian serta detail skor per peserta. |
+
+**`peserta/` — 7 file**
+
+| File | Fungsi |
+|---|---|
+| `login.php` | Login peserta dengan nama, NIM, dan token; membuka sesi ujian. |
+| `instruksi.php` | Aturan dan informasi sebelum ujian dimulai. |
+| `ujian.php` | Layar ujian: render soal, timer, progres, navigasi; juga menangani acak ulang paket. |
+| `proses_jawaban.php` | Endpoint JSON untuk menyimpan jawaban selama ujian berlangsung (autosave). |
+| `submit.php` | Mengumpulkan jawaban, menghitung skor, lalu menyimpan hasil. |
+| `hasil.php` | Halaman hasil: skor, radar chart, kelebihan/area kembang, rekomendasi, dan saran personal. |
+| `logout.php` | Mengakhiri sesi peserta. |
+
+**`assets/` — dipakai semua halaman**
+
+| File | Fungsi |
+|---|---|
+| `partials/head.php` | `<head>` bersama: meta, judul, link `tailwind.css` dengan cache-buster `filemtime`. |
+| `partials/header_admin.php` | Topbar admin. |
+| `partials/header_peserta.php` | Topbar peserta (termasuk info timer). |
+| `partials/theme_toggle.php` | Tombol mode terang/gelap. |
+| `css/tailwind.css` | File CSS hasil build — satu-satunya stylesheet yang dipakai. |
+| `js/ui.js` | Tema terang/gelap (tersimpan di `localStorage`) dan jam live. |
+| `js/app.js` | Khusus halaman ujian: render soal, timer mundur, autosave, auto-submit, progres. |
+| `images/` | Aset gambar. |
+
+**`tailwind/` — sumber CSS**
+
+| File | Fungsi |
+|---|---|
+| `input.css` | Variabel warna tema (terang/gelap) dan komponen kustom, misalnya kartu saran. |
+| `tailwind.config.js` | Palet warna dan daftar file yang di-scan. |
+| `build.bat` | Menjalankan build Tailwind dalam satu klik. |
+
+**`database/` — berkas SQL**
+
+| File | Fungsi |
+|---|---|
+| `database.sql` | Skema tabel awal. |
+| `seed_soal.sql` | 60 soal beserta pilihan jawabannya. |
+| `migrasi_bank_soal.sql` | Mengubah tabel `soal` menjadi `bank_soal`: memperbaiki pasangan soal–pilihan, mengganti nama kolom, dan menambah 3 soal checkbox. |
+
 ---
 
 ## Database
@@ -97,6 +183,18 @@ Tabel utama meliputi:
 - `sesi_ujian`
 - `jawaban_peserta`
 - `hasil_ujian`
+
+### Menyiapkan database
+
+Kredensial diatur di `config/database.php` (Laragon): host `localhost`, port `3307`, nama database `softskill`, user `root` tanpa password.
+
+Jalankan tiga berkas SQL di folder `database/` secara berurutan, misalnya lewat phpMyAdmin:
+
+1. `database.sql` — membuat seluruh tabel.
+2. `seed_soal.sql` — mengisi 60 soal beserta pilihan jawabannya.
+3. `migrasi_bank_soal.sql` — mengubah tabel `soal` menjadi `bank_soal`, yaitu struktur yang dipakai aplikasi.
+
+Setelah itu siapkan admin dan token ujian melalui halaman login serta `admin/token.php`.
 
 ---
 
@@ -188,31 +286,30 @@ Peserta dapat melanjutkan sesi ujian yang masih berjalan. Jawaban yang sudah ter
 
 ## Token Ujian
 
-Token digunakan untuk mengatur akses peserta ke sesi asesmen.
+Token mengatur akses peserta ke sesi asesmen. Bagian yang sudah berjalan:
 
-Fitur pengelolaan token meliputi:
+- `peserta/login.php` hanya menerima token berstatus **aktif** dan belum lewat masa berlaku, dengan pembanding waktu dari MySQL (`NOW()`), bukan dari browser.
+- Batas penggunaan diperiksa saat login (`jumlah_dipakai < batas_penggunaan`), lalu jumlah pemakaian ditambah satu.
+- Bila tidak ada token aktif sama sekali, aplikasi **membuat token baru secara otomatis** agar peserta tetap bisa masuk.
 
-- Penambahan token oleh admin.
-- Pengaturan batas penggunaan token.
-- Pengaturan masa berlaku token.
-- Pengaktifan dan penonaktifan token.
-- Pembuatan token otomatis apabila tidak tersedia token aktif, sesuai implementasi aplikasi.
+`admin/token.php` (daftar dan `?tambah=1`) berisi tampilan untuk mengelola kode token, batas penggunaan, masa berlaku, dan status — bagian akses database-nya masih kerangka (`TODO`).
 
 ---
 
 ## Keamanan
 
-Aplikasi menerapkan beberapa mekanisme keamanan, antara lain:
+Mekanisme yang sudah berjalan pada sisi peserta:
 
-- Pengelolaan sesi PHP untuk peserta dan admin.
-- Prepared statement PDO untuk membantu mencegah SQL injection.
-- `password_hash()` dan `password_verify()` untuk pengelolaan kata sandi admin.
-- Validasi token dan waktu ujian pada sisi server.
-- Pencegahan pengumpulan hasil ujian ganda.
-- `htmlspecialchars()` untuk membantu mencegah serangan XSS.
+- Session PHP untuk menjaga sesi ujian; umur session dibuat lebih lama dari durasi ujian.
+- Prepared statement PDO pada seluruh query aplikasi.
+- Validasi token (status, batas pakai, masa berlaku) dan batas waktu ujian di sisi server, memakai waktu dari MySQL.
+- Pencegahan pengumpulan ganda: `peserta/submit.php` menolak permintaan bila sesi sudah `sudah_submit`.
+- `htmlspecialchars()` untuk output berisiko terhadap XSS.
+
+Masih berupa rencana (ditandai `TODO`): verifikasi kata sandi admin dengan `password_hash()`/`password_verify()` serta penjaga session di halaman admin.
 
 ---
 
 ## Catatan
 
-File `Cloud Computing_Kel.4.html` yang terdapat pada folder tugas merupakan salinan cadangan atau referensi versi lama aplikasi. File tersebut tetap dipertahankan dan tidak diubah.
+Proyek ini tidak lagi memuat berkas `.html` — seluruh halaman ditulis sebagai PHP, ditata dengan CSS hasil build Tailwind, dan data disimpan di MySQL.
