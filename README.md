@@ -33,7 +33,8 @@ Aplikasi ini dibangun menggunakan **PHP Native**, **MySQL**, dan **Apache** mela
 soft-skills-assessment/
 ├── index.php
 ├── config/
-│   └── database.php
+│   ├── database.php
+│   └── saran.php
 ├── peserta/
 │   ├── login.php
 │   ├── instruksi.php
@@ -41,6 +42,7 @@ soft-skills-assessment/
 │   ├── proses_jawaban.php
 │   ├── submit.php
 │   ├── acak_paket.php
+│   ├── logout.php
 │   └── hasil.php
 ├── admin/
 │   ├── login.php
@@ -54,10 +56,15 @@ soft-skills-assessment/
 │   ├── hasil.php
 │   └── detail_hasil.php
 ├── assets/
+│   ├── partials/
+│   │   ├── head.php
+│   │   ├── header_admin.php
+│   │   ├── header_peserta.php
+│   │   └── theme_toggle.php
 │   ├── css/
-│   │   ├── style.css
 │   │   └── tailwind.css
 │   ├── js/
+│   │   ├── ui.js
 │   │   └── app.js
 │   └── images/
 ├── tailwind/
@@ -129,7 +136,24 @@ npx tailwindcss@3.4.17 -c tailwind/tailwind.config.js -i tailwind/input.css -o a
 
 ## Tampilan Ujian
 
-Aplikasi menggunakan Tailwind CSS dan CSS khusus dengan tema ungu serta dukungan mode terang dan gelap.
+Seluruh halaman (admin maupun peserta) memakai **satu sistem desain yang sama**: stylesheet `assets/css/tailwind.css`, partial bersama di `assets/partials/`, dan JavaScript umum `assets/js/ui.js`.
+
+### Konsistensi antarhalaman
+
+- `assets/partials/head.php` — doctype, meta, anti-kedip tema, dan link CSS untuk semua halaman.
+- `assets/partials/header_admin.php` — topbar admin (judul + menu aktif + jam + tombol tema).
+- `assets/partials/header_peserta.php` — topbar peserta (judul + identitas + timer/info + jam + tombol tema).
+- `assets/partials/theme_toggle.php` — tombol terang/gelap.
+- `assets/js/ui.js` — ganti tema (tersimpan di `localStorage`) dan jam live berbahasa Indonesia.
+
+Tambahkan class Tailwind `sm:`/`md:`/`lg:` pada markup baru, lalu build ulang CSS agar utilitasnya ikut terbit.
+
+### Mode terang dan gelap
+
+- Mode gelap memakai palet **biru–ungu pekat**: latar `#0a0a1f`, kartu `#141136`, panel `#1b1750`, aksen `#8f8ff7`/`#b195ff`.
+- Variabel warna didefinisikan di `tailwind/input.css` pada blok `:root` (terang) dan `.dark` (gelap), sehingga mengubah satu tempat langsung menyebar ke semua halaman.
+- Preferensi tersimpan di `localStorage` dengan kunci `theme`; sistem `prefers-color-scheme` dipakai saat pengguna belum memilih.
+- Chart pada halaman hasil ikut berganti warna mengikuti event `themechange`.
 
 Fitur tampilan ujian meliputi:
 
@@ -142,8 +166,21 @@ Fitur tampilan ujian meliputi:
 - Tombol untuk menyelesaikan ujian lebih awal.
 - Konfirmasi sebelum pengumpulan jawaban.
 - Penyimpanan jawaban selama sesi berlangsung.
-- Tampilan hasil asesmen dengan radar chart.
+- Tampilan hasil asesmen dengan radar chart, kelebihan/area kembang, dan rekomendasi pengembangan.
+- **Saran personal**: maksimal tiga kartu ringkas (tag, judul, tiga langkah latihan).
+- Tombol **Cetak Hasil** serta **Kembali ke Login** (`peserta/logout.php`) di halaman hasil.
 - Mode terang dan gelap dengan preferensi tema tersimpan.
+
+### Saran personal di halaman hasil
+
+Saran disusun otomatis oleh `config/saran.php` (`build_saran()`) dari dua sumber data:
+
+- **Skor soft skills** — kartu muncul bila Interpersonal/Communication/Emotional Intelligence < 70 (dua terlemah saja).
+- **Skor dimensi** (`skor_dimensi`: EI/SN/TF/JP) — kartu muncul bila kecenderungan menyimpang ≥ 15 poin dari tengah (50), misalnya Introvert dominan, Thinking dominan, atau Perceiving dominan.
+
+Agar ringkas, keluaran dibatasi **maksimal 3 kartu** (2 soft skill + 1 dimensi paling menyimpang) dan **maksimal 3 langkah per kartu**. Kalau semua skor sehat, tampil satu kartu "Pertahankan".
+
+Sifat sarannya: kecenderungan seperti introvert **tidak dianggap salah** — yang diberi latihan adalah agar sisi itu tidak berlebihan dan kepentingan peserta tetap tersampaikan. Ubah teks/aturan di `config/saran.php`; tidak perlu build ulang CSS kecuali menambah class baru.
 
 Peserta dapat melanjutkan sesi ujian yang masih berjalan. Jawaban yang sudah tersimpan akan digunakan dalam proses penilaian ketika ujian dikumpulkan.
 

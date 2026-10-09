@@ -409,27 +409,8 @@
             }
         };
 
-        // Tema terang / gelap (disimpan di localStorage)
-        const themeBtn = document.getElementById('themeToggle');
-        function terapkanTema() {
-            if (!themeBtn) return;
-            const gelap = document.documentElement.classList.contains('dark');
-            themeBtn.setAttribute('aria-pressed', gelap ? 'true' : 'false');
-            const sun  = themeBtn.querySelector('.icon-sun');
-            const moon = themeBtn.querySelector('.icon-moon');
-            if (sun)  sun.classList.toggle('hidden', gelap);
-            if (moon) moon.classList.toggle('hidden', !gelap);
-        }
-        terapkanTema();
-        if (themeBtn) {
-            themeBtn.onclick = function () {
-                document.documentElement.classList.toggle('dark');
-                try {
-                    localStorage.setItem('theme', document.documentElement.classList.contains('dark') ? 'dark' : 'light');
-                } catch (e) {}
-                terapkanTema();
-            };
-        }
+        // Tema terang / gelap ditangani oleh assets/js/ui.js
+        // (event "themechange" bisa dipakai bila perlu).
 
         // Navigasi dengan tombol panah keyboard.
         document.addEventListener('keydown', function (e) {

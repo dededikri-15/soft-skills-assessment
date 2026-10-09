@@ -60,9 +60,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'GET' && isset($_GET['ambil_token'])) {
 /*
  * Halaman login SELALU menampilkan form (nama, NIM, token).
  * Kalau peserta masih punya sesi ujian yang berjalan, tampilkan banner
- * "Lanjutkan Ujian" (tombol Next) supaya bisa kembali tanpa kehilangan
- * sesi. Bila ujian sudah selesai / habis waktu, sesi dibersihkan agar
- * peserta berikutnya bisa login.
+ * "Lanjutkan Ujian" supaya bisa kembali tanpa kehilangan sesi.
  */
 $sesiLanjut = null;
 
@@ -168,146 +166,124 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         }
     }
 }
-?>
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login Peserta - Soft Skills Assessment</title>
-    <script>
-    try {
-        var t = localStorage.getItem('theme');
-        if (t === 'dark' || (!t && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        }
-    } catch (e) {}
-    </script>
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="../assets/css/tailwind.css">
-</head>
-<body class="login-screen">
 
-    <div class="relative w-full max-w-5xl overflow-hidden rounded-[28px] bg-white shadow-[0_25px_70px_rgba(40,40,80,.14)] ring-1 ring-slate-200/70 md:grid md:grid-cols-2 dark:bg-slate-900 dark:shadow-2xl dark:ring-slate-700">
+$pageTitle = 'Login Peserta - Soft Skills Assessment';
+$bodyClass = 'login-screen';
+require __DIR__ . '/../assets/partials/head.php';
+?>
+
+    <div class="login-wrapper">
 
         <!-- Panel kiri: profil aplikasi -->
-        <div class="relative overflow-hidden bg-gradient-to-br from-brand-600 via-brand-600 to-violet-600 p-8 text-white sm:p-10">
-            <div class="pointer-events-none absolute -right-16 -bottom-24 h-64 w-64 rounded-full bg-white/10"></div>
-            <div class="pointer-events-none absolute -right-4 top-28 h-32 w-32 rounded-full bg-white/10"></div>
+        <div class="login-info">
+            <div class="logo-circle">&#129504;</div>
 
-            <div class="flex h-14 w-14 items-center justify-center rounded-2xl bg-white/20 text-2xl shadow-lg">&#129504;</div>
-
-            <h1 class="mt-6 text-[34px] font-extrabold leading-[1.12] tracking-tight">Soft Skills<br>Assessment</h1>
-            <p class="mt-4 max-w-sm text-[15px] leading-relaxed text-white/85">
+            <h1>Soft Skills<br>Assessment</h1>
+            <p>
                 Sistem ujian kemampuan interpersonal, komunikasi,
                 kecerdasan emosional, dan profil kecenderungan
                 kepribadian mahasiswa.
             </p>
 
-            <ul class="mt-6 space-y-3 text-[14.5px] font-medium text-white/95">
-                <li class="flex items-center gap-3">
-                    <span class="flex h-6 w-6 flex-none items-center justify-center rounded-full bg-white/20 text-[12px] font-bold">&#10003;</span>
+            <div class="feature-list">
+                <div class="feature">
+                    <span class="feature-icon">&#10003;</span>
                     Situational Judgment Test (SJT)
-                </li>
-                <li class="flex items-center gap-3">
-                    <span class="flex h-6 w-6 flex-none items-center justify-center rounded-full bg-white/20 text-[12px] font-bold">&#10003;</span>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">&#10003;</span>
                     Emotional Intelligence Assessment
-                </li>
-                <li class="flex items-center gap-3">
-                    <span class="flex h-6 w-6 flex-none items-center justify-center rounded-full bg-white/20 text-[12px] font-bold">&#10003;</span>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">&#10003;</span>
                     Communication &amp; Interpersonal Skills
-                </li>
-                <li class="flex items-center gap-3">
-                    <span class="flex h-6 w-6 flex-none items-center justify-center rounded-full bg-white/20 text-[12px] font-bold">&#10003;</span>
+                </div>
+                <div class="feature">
+                    <span class="feature-icon">&#10003;</span>
                     Profil kepribadian dan kompetensi
-                </li>
-            </ul>
+                </div>
+            </div>
 
-            <div class="mt-7 inline-flex flex-wrap items-center gap-x-2 gap-y-1 rounded-full bg-white/15 px-4 py-2 text-[13px] font-bold ring-1 ring-white/25">
+            <div class="pill-note">
                 60 soal <span class="opacity-60">&bull;</span> 30 menit
                 <span class="opacity-60">&bull;</span> paket soal berbeda tiap peserta
             </div>
         </div>
 
         <!-- Panel kanan: form login -->
-        <div class="p-7 sm:p-10">
+        <div class="login-form">
             <div class="flex flex-wrap items-center justify-between gap-3">
-                <span class="inline-block rounded-full bg-brand-100 px-3.5 py-1.5 text-[11px] font-extrabold uppercase tracking-[0.18em] text-brand-700 dark:bg-brand-900/60 dark:text-brand-300">
-                    Masuk Ujian
-                </span>
+                <span class="badge !mb-0">Masuk Ujian</span>
 
                 <div class="flex flex-wrap items-center gap-2.5">
-                    <span class="clock-pill" id="liveClock" aria-live="off">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
-                        <span id="clockText">Memuat waktu...</span>
+                    <span class="clock-pill" aria-live="off">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="9"/><path d="M12 7v5l3 2"/></svg>
+                        <span class="clock-text" id="clockText">Memuat waktu...</span>
                     </span>
 
-                    <button type="button" id="themeToggle" aria-label="Ganti tema terang / gelap" aria-pressed="false"
-                            class="inline-flex h-10 w-10 flex-none items-center justify-center rounded-xl border border-slate-200 bg-white text-slate-600 transition hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-800 dark:text-slate-300 dark:hover:bg-slate-700">
-                        <svg class="icon-sun h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>
-                        <svg class="icon-moon hidden h-5 w-5" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/></svg>
-                    </button>
+                    <?php $extraToggleClass = 'h-10 w-10'; require __DIR__ . '/../assets/partials/theme_toggle.php'; ?>
                 </div>
             </div>
 
-            <h2 class="mt-4 text-[26px] font-extrabold tracking-tight text-slate-900 dark:text-white">Mulai Assessment</h2>
-            <p class="mt-1.5 text-sm text-slate-500 dark:text-slate-400">Masukkan identitas dan token ujian yang telah diberikan.</p>
+            <h2 class="mt-4">Mulai Assessment</h2>
+            <p class="subtitle" style="margin-top:6px;">Masukkan identitas dan token ujian yang telah diberikan.</p>
 
             <?php if ($sesiLanjut): $sisa = max(0, (int) $sesiLanjut['sisa_detik']); ?>
-            <div class="mt-5 flex flex-wrap items-center justify-between gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3.5 dark:border-emerald-800 dark:bg-emerald-900/40">
+            <div class="notice success flex flex-wrap items-center justify-between gap-3">
                 <div class="min-w-0">
-                    <p class="text-[13.5px] font-bold text-emerald-700 dark:text-emerald-300">Sesi ujian kamu masih berjalan</p>
-                    <p class="mt-0.5 text-[13px] leading-relaxed text-emerald-700/80 dark:text-emerald-300/80">
+                    <div style="font-weight:800;">Sesi ujian kamu masih berjalan</div>
+                    <div style="font-size:13px;margin-top:3px;">
                         <strong><?= htmlspecialchars($sesiLanjut['nama'], ENT_QUOTES, 'UTF-8') ?></strong>
                         &bull; <?= htmlspecialchars($sesiLanjut['nim'], ENT_QUOTES, 'UTF-8') ?>
                         &bull; sisa waktu <strong><?= sprintf('%02d:%02d', intdiv($sisa, 60), $sisa % 60) ?></strong>
-                    </p>
+                    </div>
                 </div>
-                <a href="instruksi.php"
-                   class="inline-flex flex-none items-center gap-2 rounded-xl bg-gradient-to-r from-brand-600 to-violet-600 px-5 py-2.5 text-[14px] font-bold text-white shadow-md shadow-brand-600/25 transition hover:-translate-y-0.5 dark:from-brand-500 dark:to-violet-500">
+                <a href="instruksi.php" class="btn btn-next" style="padding:11px 20px;font-size:14px;">
                     Lanjutkan Ujian
-                    <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
                 </a>
             </div>
             <?php endif; ?>
 
-            <form method="post" action="login.php" autocomplete="off" class="mt-7">
+            <form method="post" action="login.php" autocomplete="off" style="margin-top:14px;">
 
-                <div class="mb-4">
-                    <label for="studentName" class="mb-2 block text-[13px] font-bold text-slate-700 dark:text-slate-300">Nama Lengkap</label>
-                    <input type="text" name="nama" id="studentName" placeholder="Masukkan nama lengkap"
-                           value="<?= htmlspecialchars($nama, ENT_QUOTES, 'UTF-8') ?>" required
-                           class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-[15px] text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500">
+                <div class="form-group">
+                    <label for="studentName">Nama Lengkap</label>
+                    <input type="text" class="field" name="nama" id="studentName"
+                           placeholder="Masukkan nama lengkap" required
+                           value="<?= htmlspecialchars($nama, ENT_QUOTES, 'UTF-8') ?>">
                 </div>
 
-                <div class="mb-4">
-                    <label for="studentNim" class="mb-2 block text-[13px] font-bold text-slate-700 dark:text-slate-300">NIM</label>
-                    <input type="text" name="nim" id="studentNim" placeholder="Masukkan NIM"
-                           value="<?= htmlspecialchars($nim, ENT_QUOTES, 'UTF-8') ?>" required
-                           class="w-full rounded-xl border border-slate-300 bg-white px-4 py-3 text-[15px] text-slate-800 outline-none transition placeholder:text-slate-400 focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500">
+                <div class="form-group">
+                    <label for="studentNim">NIM</label>
+                    <input type="text" class="field" name="nim" id="studentNim"
+                           placeholder="Masukkan NIM" required
+                           value="<?= htmlspecialchars($nim, ENT_QUOTES, 'UTF-8') ?>">
                 </div>
 
-                <div class="mb-4">
-                    <label for="examToken" class="mb-2 block text-[13px] font-bold text-slate-700 dark:text-slate-300">Token Ujian</label>
+                <div class="form-group">
+                    <label for="examToken">Token Ujian</label>
                     <div class="flex gap-2">
-                        <input type="text" name="token" id="examToken" class="token-input min-w-0 flex-1 rounded-xl border border-slate-300 bg-white px-4 py-3 text-[15px] text-slate-800 outline-none transition placeholder:font-normal placeholder:tracking-normal placeholder:text-slate-400 placeholder:normal-case focus:border-brand-500 focus:ring-4 focus:ring-brand-500/15 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 dark:placeholder:text-slate-500"
-                               maxlength="30" placeholder="CONTOH: EQ2026A" required
+                        <input type="text" class="field token-input min-w-0 flex-1"
+                               name="token" id="examToken" maxlength="30"
+                               placeholder="CONTOH: EQ2026A" required
                                value="<?= htmlspecialchars($token, ENT_QUOTES, 'UTF-8') ?>">
                         <button type="button" id="reloadTokenBtn" title="Ambil token yang masih berlaku"
-                                class="inline-flex flex-none items-center gap-1.5 rounded-xl border border-slate-300 bg-slate-100 px-4 text-sm font-bold text-slate-700 transition hover:border-brand-400 hover:text-brand-600 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-200 dark:hover:border-brand-500 dark:hover:text-brand-300">
-                            <svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
+                                class="btn btn-secondary" style="padding:0 16px;white-space:nowrap;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg>
                             Reload
                         </button>
                     </div>
                 </div>
 
-                <div class="mb-4 rounded-xl bg-red-50 px-4 py-3 text-sm font-semibold text-red-600 dark:bg-red-950/60 dark:text-red-300" id="loginError"<?= $error === '' ? ' style="display:none"' : '' ?>><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></div>
+                <div class="error" id="loginError"<?= $error === '' ? ' style="display:none"' : '' ?>><?= htmlspecialchars($error, ENT_QUOTES, 'UTF-8') ?></div>
 
                 <button type="submit" class="btn btn-primary">Verifikasi &amp; Lanjut</button>
 
-                <p class="mt-5 flex items-start gap-2.5 rounded-xl bg-slate-50 px-4 py-3 text-[13px] leading-relaxed text-slate-500 dark:bg-slate-800/70 dark:text-slate-400">
-                    <svg class="mt-0.5 h-4 w-4 flex-none text-brand-500" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5"/><path d="M4 20 21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/></svg>
-                    <span>Setiap peserta mendapat <strong class="font-bold text-slate-700 dark:text-slate-200">paket soal yang berbeda</strong> (60 soal) &mdash; diacak otomatis saat login.</span>
+                <p class="mt-5 flex items-start gap-2.5 rounded-xl text-muted"
+                   style="background:var(--c-surface);border:1px solid var(--c-line);border-radius:14px;padding:12px 14px;font-size:13px;line-height:1.65;margin-top:20px;">
+                    <svg class="mt-0.5 flex-none" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="color:var(--c-brand)"><path d="M16 3h5v5"/><path d="M4 20 21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/></svg>
+                    <span>Setiap peserta mendapat <strong style="color:var(--c-text)">paket soal yang berbeda</strong> (60 soal) &mdash; diacak otomatis saat login.</span>
                 </p>
 
             </form>
@@ -346,55 +322,12 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 })
                 .finally(function () {
                     reloadBtn.disabled = false;
-                    reloadBtn.innerHTML = '<svg class="h-4 w-4" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg> Reload';
+                    reloadBtn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 12a9 9 0 1 1-2.64-6.36"/><path d="M21 3v6h-6"/></svg> Reload';
                 });
         });
-
-        // Jam: hari, tanggal, bulan, tahun + jam (bahasa Indonesia, update tiap detik)
-        (function () {
-            var el = document.getElementById('clockText');
-            if (!el) return;
-            var hari  = ['Minggu','Senin','Selasa','Rabu','Kamis','Jumat','Sabtu'];
-            var bulan = ['Januari','Februari','Maret','April','Mei','Juni','Juli','Agustus','September','Oktober','November','Desember'];
-            var pad   = function (n) { return n < 10 ? '0' + n : '' + n; };
-            var tick  = function () {
-                var d = new Date();
-                el.textContent = hari[d.getDay()] + ', ' + pad(d.getDate()) + ' ' + bulan[d.getMonth()]
-                    + ' ' + d.getFullYear() + ' \u2022 ' + pad(d.getHours()) + ':' + pad(d.getMinutes()) + ':' + pad(d.getSeconds());
-            };
-            tick();
-            setInterval(tick, 1000);
-        })();
-
-        // Mode terang / gelap (preferensi disimpan di localStorage)
-        (function () {
-            var root = document.documentElement;
-            var btn  = document.getElementById('themeToggle');
-
-            function apply() {
-                if (!btn) return;
-                var dark = root.classList.contains('dark');
-                btn.setAttribute('aria-pressed', dark ? 'true' : 'false');
-                var sun  = btn.querySelector('.icon-sun');
-                var moon = btn.querySelector('.icon-moon');
-                if (sun)  sun.classList.toggle('hidden', dark);
-                if (moon) moon.classList.toggle('hidden', !dark);
-            }
-
-            apply();
-
-            if (btn) {
-                btn.addEventListener('click', function () {
-                    root.classList.toggle('dark');
-                    try {
-                        localStorage.setItem('theme', root.classList.contains('dark') ? 'dark' : 'light');
-                    } catch (e) {}
-                    apply();
-                });
-            }
-        })();
     })();
     </script>
+    <script src="../assets/js/ui.js?v=<?= (int) @filemtime(__DIR__ . '/../assets/js/ui.js') ?>"></script>
 
 </body>
 </html>

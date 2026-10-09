@@ -1,3 +1,1552 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* =====================================================================
+   1. BASE / RESET
+   preflight Tailwind dimatikan, jadi reset ditulis sendiri di sini.
+   ===================================================================== */
+
+@layer base {
+    :root {
+        /* --- palet terang --- */
+        --c-bg: #f4f5fc;
+        --c-card: #ffffff;
+        --c-surface: #f7f7ff;
+        --c-text: #1a1a3c;
+        --c-muted: #6d7194;
+        --c-line: #e5e6f3;
+
+        --c-brand: #5b5bd6;
+        --c-brand2: #8b5cf6;
+        --c-brand-soft: rgba(91, 91, 214, .10);
+        --c-brand2-soft: rgba(139, 92, 246, .13);
+
+        --c-success: #189a63;
+        --c-success-soft: rgba(24, 154, 99, .12);
+        --c-danger: #dd4545;
+        --c-danger-soft: rgba(221, 69, 69, .12);
+        --c-warning: #b87a08;
+        --c-warning-soft: rgba(240, 180, 60, .18);
+
+        --grad-brand: linear-gradient(135deg, var(--c-brand), var(--c-brand2));
+        --grad-panel: linear-gradient(145deg, #5656cf, #7c5ce8);
+
+        --sh-soft: 0 18px 50px rgba(40, 40, 80, .08);
+        --sh-lift: 0 10px 30px rgba(40, 40, 80, .06);
+        --sh-pop: 0 25px 70px rgba(40, 40, 80, .14);
+        --sh-brand: 0 10px 24px rgba(91, 91, 214, .28);
+    }
+
+    /* --- palet gelap: biru ungu pekat --- */
+    .dark {
+        --c-bg: #0a0a1f;
+        --c-card: #141136;
+        --c-surface: #1b1750;
+        --c-text: #e9e7ff;
+        --c-muted: #a49dd8;
+        --c-line: #2e2a6b;
+
+        --c-brand: #8f8ff7;
+        --c-brand2: #b195ff;
+        --c-brand-soft: rgba(143, 143, 247, .16);
+        --c-brand2-soft: rgba(177, 149, 255, .18);
+
+        --c-success: #4bdca5;
+        --c-success-soft: rgba(75, 220, 165, .14);
+        --c-danger: #ff8f8f;
+        --c-danger-soft: rgba(255, 143, 143, .14);
+        --c-warning: #ffd479;
+        --c-warning-soft: rgba(255, 212, 121, .14);
+
+        --grad-panel: linear-gradient(145deg, #3d3ab0, #6b46d6);
+
+        --sh-soft: 0 18px 50px rgba(0, 0, 0, .42);
+        --sh-lift: 0 10px 30px rgba(0, 0, 0, .34);
+        --sh-pop: 0 25px 70px rgba(0, 0, 0, .5);
+        --sh-brand: 0 10px 24px rgba(143, 143, 247, .28);
+    }
+
+    * { box-sizing: border-box; }
+
+    html { -webkit-text-size-adjust: 100%; }
+
+    body {
+        margin: 0;
+        min-height: 100vh;
+        overflow-x: hidden;
+        font-family: Inter, "Segoe UI", Arial, sans-serif;
+        background: var(--c-bg);
+        color: var(--c-text);
+        -webkit-font-smoothing: antialiased;
+        transition: background-color .25s ease, color .25s ease;
+    }
+
+    h1, h2, h3, h4, p { margin: 0; }
+
+    button, input, select, textarea { font-family: inherit; font-size: inherit; color: inherit; }
+
+    a { color: inherit; }
+
+    img, svg, canvas { max-width: 100%; }
+
+    :focus-visible {
+        outline: 3px solid var(--c-brand);
+        outline-offset: 2px;
+    }
+
+    ::selection { background: var(--c-brand-soft); }
+}
+
+/* =====================================================================
+   2. KOMPONEN
+   ===================================================================== */
+
+@layer components {
+
+    .hidden { display: none !important; }
+
+    .container {
+        width: min(1100px, 92%);
+        margin-inline: auto;
+    }
+
+    .screen { min-height: 100vh; }
+
+    .card {
+        background: var(--c-card);
+        border: 1px solid var(--c-line);
+        border-radius: 26px;
+        box-shadow: var(--sh-soft);
+    }
+
+    /* --------------------------------------------------- badge & tag */
+    .badge {
+        display: inline-block;
+        background: var(--c-brand-soft);
+        color: var(--c-brand);
+        font-size: 12px;
+        font-weight: 700;
+        letter-spacing: 1.2px;
+        padding: 7px 14px;
+        border-radius: 999px;
+        margin-bottom: 16px;
+    }
+
+    .tag {
+        display: inline-block;
+        padding: 4px 11px;
+        border-radius: 999px;
+        font-size: 11.5px;
+        font-weight: 800;
+        background: var(--c-surface);
+        border: 1px solid var(--c-line);
+        color: var(--c-text);
+        white-space: nowrap;
+    }
+    .tag.purple { background: var(--c-brand2-soft); color: var(--c-brand2); border-color: transparent; }
+    .tag.green  { background: var(--c-success-soft); color: var(--c-success); border-color: transparent; }
+    .tag.red    { background: var(--c-danger-soft);  color: var(--c-danger);  border-color: transparent; }
+    .tag.blue   { background: var(--c-brand-soft);   color: var(--c-brand);   border-color: transparent; }
+
+    /* ------------------------------------------------------- buttons */
+    .btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        border: 1.5px solid transparent;
+        border-radius: 14px;
+        padding: 14px 26px;
+        font-size: 15px;
+        font-weight: 700;
+        line-height: 1.2;
+        cursor: pointer;
+        text-align: center;
+        text-decoration: none;
+        transition: .2s;
+        background: transparent;
+    }
+
+    .btn-primary {
+        width: 100%;
+        background: var(--grad-brand);
+        color: #fff;
+        box-shadow: var(--sh-brand);
+    }
+    .btn-primary:hover { filter: brightness(1.07); transform: translateY(-1px); }
+
+    .btn-secondary {
+        background: var(--c-surface);
+        border-color: var(--c-line);
+        color: var(--c-text);
+    }
+    .btn-secondary:hover { border-color: var(--c-brand); color: var(--c-brand); }
+
+    .btn-next {
+        background: var(--grad-brand);
+        color: #fff;
+        box-shadow: var(--sh-brand);
+    }
+    .btn-next:hover { transform: translateY(-2px); }
+
+    .btn-submit {
+        background: var(--c-success);
+        color: #fff;
+        box-shadow: 0 10px 22px rgba(24, 154, 99, .26);
+    }
+    .btn-submit:hover { transform: translateY(-2px); }
+
+    .btn-finish {
+        background: transparent;
+        color: var(--c-success);
+        border-color: var(--c-success);
+    }
+    .btn-finish:hover { background: var(--c-success-soft); transform: translateY(-2px); }
+
+    .btn:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+
+    /* --------------------------------------------------------- login */
+    .login-screen {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 40px 20px;
+        background:
+            radial-gradient(circle at 10% 20%, rgba(91, 91, 214, .18), transparent 30%),
+            radial-gradient(circle at 90% 80%, rgba(139, 92, 246, .15), transparent 30%),
+            var(--c-bg);
+    }
+    .dark .login-screen {
+        background:
+            radial-gradient(circle at 10% 20%, rgba(143, 143, 247, .22), transparent 32%),
+            radial-gradient(circle at 90% 80%, rgba(177, 149, 255, .18), transparent 32%),
+            var(--c-bg);
+    }
+
+    .login-wrapper {
+        width: min(1050px, 100%);
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        background: var(--c-card);
+        border: 1px solid var(--c-line);
+        border-radius: 30px;
+        overflow: hidden;
+        box-shadow: var(--sh-pop);
+    }
+
+    .login-info {
+        padding: 55px;
+        color: #fff;
+        background: var(--grad-panel);
+        position: relative;
+        overflow: hidden;
+    }
+    .login-info:after {
+        content: "";
+        position: absolute;
+        width: 280px; height: 280px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, .08);
+        right: -100px; bottom: -100px;
+        pointer-events: none;
+    }
+    .login-info > * { position: relative; z-index: 1; }
+
+    .logo-circle {
+        width: 65px; height: 65px;
+        border-radius: 18px;
+        background: rgba(255, 255, 255, .18);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 28px;
+        margin-bottom: 30px;
+        box-shadow: 0 10px 24px rgba(0, 0, 0, .16);
+    }
+
+    .login-info h1 {
+        font-size: 38px;
+        line-height: 1.15;
+        font-weight: 800;
+        letter-spacing: -.5px;
+        margin-bottom: 18px;
+    }
+
+    .login-info p {
+        color: rgba(255, 255, 255, .88);
+        line-height: 1.7;
+        margin-bottom: 30px;
+    }
+
+    .feature-list .feature {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        margin-bottom: 14px;
+        font-size: 14.5px;
+        font-weight: 500;
+    }
+
+    .feature-icon {
+        width: 26px; height: 26px;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, .2);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 13px;
+        flex: none;
+    }
+
+    .pill-note {
+        display: inline-flex;
+        flex-wrap: wrap;
+        align-items: center;
+        gap: 6px;
+        border-radius: 999px;
+        background: rgba(255, 255, 255, .15);
+        border: 1px solid rgba(255, 255, 255, .25);
+        padding: 9px 16px;
+        font-size: 13px;
+        font-weight: 700;
+    }
+
+    .login-form { padding: 55px; }
+    .login-form h2 { font-size: 26px; font-weight: 800; margin-bottom: 8px; }
+
+    .subtitle {
+        color: var(--c-muted);
+        font-size: 14px;
+        margin-bottom: 28px;
+    }
+
+    .form-group { margin-bottom: 18px; }
+
+    .form-group label {
+        display: block;
+        font-size: 13px;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .field,
+    .form-group input:not([type="checkbox"]):not([type="radio"]),
+    .form-group select,
+    .form-group textarea {
+        display: block;
+        width: 100%;
+        padding: 14px 16px;
+        border: 1.5px solid var(--c-line);
+        border-radius: 14px;
+        background: var(--c-card);
+        color: var(--c-text);
+        font-size: 15px;
+        outline: none;
+        transition: .2s;
+    }
+    .field::placeholder,
+    .form-group input::placeholder { color: var(--c-muted); opacity: .8; }
+    .field:focus,
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+        border-color: var(--c-brand);
+        box-shadow: 0 0 0 4px var(--c-brand-soft);
+    }
+
+    .token-input {
+        text-transform: uppercase;
+        letter-spacing: 2px;
+        font-weight: 700;
+    }
+
+    .error {
+        background: var(--c-danger-soft);
+        color: var(--c-danger);
+        border: 1px solid transparent;
+        border-radius: 12px;
+        padding: 12px 14px;
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 16px;
+    }
+
+    /* -------------------------------------------------- instruksi */
+    .instruction-screen {
+        display: flex;
+        align-items: center;
+        padding: 50px 0;
+    }
+
+    .instruction-card {
+        background: var(--c-card);
+        border: 1px solid var(--c-line);
+        border-radius: 28px;
+        padding: 48px;
+        box-shadow: var(--sh-soft);
+    }
+
+    .instruction-card h1 {
+        font-size: 32px;
+        font-weight: 800;
+        letter-spacing: -.5px;
+        margin-bottom: 14px;
+    }
+
+    .instruction-card > p {
+        color: var(--c-muted);
+        line-height: 1.75;
+        margin-bottom: 28px;
+    }
+
+    .info-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 16px;
+        margin-bottom: 28px;
+    }
+
+    .info-box {
+        background: var(--c-surface);
+        border: 1px solid var(--c-line);
+        border-radius: 18px;
+        padding: 20px;
+        text-align: center;
+        color: var(--c-muted);
+        font-size: 13px;
+        font-weight: 600;
+    }
+    .info-box strong {
+        display: block;
+        font-size: 30px;
+        font-weight: 800;
+        color: var(--c-brand);
+        margin-bottom: 4px;
+    }
+
+    .rules h3 { font-size: 17px; font-weight: 800; margin-bottom: 12px; }
+    .rules p { color: var(--c-muted); line-height: 2; font-size: 14.5px; }
+
+    .rule-item {
+        display: flex;
+        gap: 12px;
+        align-items: flex-start;
+        color: var(--c-muted);
+        font-size: 15px;
+        line-height: 1.65;
+        margin-bottom: 10px;
+    }
+
+    .rule-check {
+        width: 22px; height: 22px;
+        flex: none;
+        border-radius: 50%;
+        background: var(--c-brand-soft);
+        color: var(--c-brand);
+        display: flex; align-items: center; justify-content: center;
+        font-size: 12px;
+        font-weight: 800;
+        margin-top: 1px;
+    }
+
+    /* ------------------------------------------- header ujian / admin */
+    .exam-header {
+        background: var(--c-card);
+        backdrop-filter: blur(10px);
+        border-bottom: 1px solid var(--c-line);
+        position: sticky;
+        top: 0;
+        z-index: 50;
+    }
+
+    .exam-header-inner {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 13px 0;
+    }
+
+    .exam-brand {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        min-width: 0;
+    }
+
+    .exam-logo {
+        width: 42px; height: 42px;
+        flex: none;
+        border-radius: 13px;
+        background: var(--grad-brand);
+        color: #fff;
+        display: flex; align-items: center; justify-content: center;
+        font-size: 19px;
+        box-shadow: var(--sh-brand);
+    }
+
+    .exam-title {
+        font-weight: 800;
+        color: var(--c-brand);
+        font-size: 17px;
+        letter-spacing: -.2px;
+    }
+
+    .exam-user {
+        font-size: 13px;
+        color: var(--c-muted);
+        margin-top: 3px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .exam-actions {
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        flex-wrap: wrap;
+        gap: 10px;
+        min-width: 0;
+    }
+
+    .exam-note {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        height: 46px;
+        max-width: 320px;
+        padding: 0 14px;
+        border: 1.5px dashed var(--c-brand);
+        border-radius: 14px;
+        background: var(--c-brand-soft);
+        color: var(--c-brand);
+        font-size: 13px;
+        font-weight: 700;
+        line-height: 1.25;
+    }
+    .exam-note svg { width: 16px; height: 16px; flex: none; }
+
+    .admin-nav {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 6px;
+        font-size: 14px;
+        font-weight: 700;
+    }
+    .admin-nav a {
+        color: var(--c-muted);
+        text-decoration: none;
+        padding: 8px 13px;
+        border-radius: 11px;
+        border: 1px solid transparent;
+        transition: .18s;
+    }
+    .admin-nav a:hover {
+        color: var(--c-brand);
+        background: var(--c-brand-soft);
+    }
+    .admin-nav a.active {
+        color: #fff;
+        background: var(--grad-brand);
+        box-shadow: var(--sh-brand);
+    }
+
+    /* ------------------------------------------------------ header btn */
+    .header-btn {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 8px;
+        height: 46px;
+        padding: 0 15px;
+        border: 1.5px solid var(--c-line);
+        border-radius: 14px;
+        background: var(--c-card);
+        color: var(--c-text);
+        font-size: 13.5px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: .18s;
+    }
+    .header-btn:hover {
+        border-color: var(--c-brand);
+        color: var(--c-brand);
+        transform: translateY(-1px);
+    }
+    .header-btn:disabled { opacity: .55; cursor: not-allowed; transform: none; }
+    .header-btn svg { width: 17px; height: 17px; flex: none; }
+    .header-btn-icon { padding: 0; width: 46px; flex: none; }
+
+    /* ---------------------------------------------------------- timer */
+    .timer {
+        background: var(--grad-brand);
+        color: #fff;
+        font-weight: 800;
+        font-size: 20px;
+        padding: 11px 22px;
+        border-radius: 14px;
+        letter-spacing: 2px;
+        font-variant-numeric: tabular-nums;
+        box-shadow: var(--sh-brand);
+        flex: none;
+    }
+    .timer.urgent {
+        background: linear-gradient(135deg, var(--c-danger), #ef7d7d);
+        animation: pulse 1s infinite;
+    }
+
+    @keyframes pulse {
+        0%, 100% { transform: scale(1); }
+        50% { transform: scale(1.04); }
+    }
+
+    /* ---------------------------------------------------- jam / clock */
+    .clock-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        height: 40px;
+        max-width: 100%;
+        padding: 0 15px;
+        border: 1.5px solid var(--c-warning);
+        border-radius: 999px;
+        background: var(--c-warning-soft);
+        color: var(--c-warning);
+        font-size: 13px;
+        font-weight: 700;
+        letter-spacing: .2px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .clock-pill svg { width: 16px; height: 16px; flex: none; }
+
+    /* --------------------------------------------------------- notice */
+    .notice {
+        padding: 13px 16px;
+        border-radius: 14px;
+        background: var(--c-surface);
+        border: 1px solid var(--c-line);
+        color: var(--c-text);
+        font-size: 14px;
+        font-weight: 600;
+        margin-bottom: 16px;
+    }
+    .notice.success {
+        background: var(--c-success-soft);
+        border-color: transparent;
+        color: var(--c-success);
+    }
+    .notice.error {
+        background: var(--c-danger-soft);
+        border-color: transparent;
+        color: var(--c-danger);
+    }
+    .notice.warning {
+        background: var(--c-warning-soft);
+        border-color: transparent;
+        color: var(--c-warning);
+    }
+
+    /* --------------------------------------------------------- filter */
+    .filter-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 10px;
+        align-items: center;
+        margin-top: 18px;
+    }
+    .filter-bar input[type=search],
+    .filter-bar select {
+        padding: 11px 14px;
+        border: 1.5px solid var(--c-line);
+        border-radius: 12px;
+        background: var(--c-card);
+        color: var(--c-text);
+        font-size: 14px;
+    }
+    .filter-bar input[type=search] { flex: 1 1 220px; min-width: 180px; }
+    .filter-bar input:focus,
+    .filter-bar select:focus {
+        outline: none;
+        border-color: var(--c-brand);
+        box-shadow: 0 0 0 4px var(--c-brand-soft);
+    }
+    .filter-bar .btn { padding: 11px 20px; }
+
+    /* ---------------------------------------------------------- table */
+    .table-wrap {
+        overflow-x: auto;
+        margin-top: 16px;
+        border: 1px solid var(--c-line);
+        border-radius: 18px;
+        background: var(--c-card);
+    }
+
+    .data-table {
+        width: 100%;
+        border-collapse: collapse;
+        font-size: 14px;
+        min-width: 860px;
+    }
+    .data-table th,
+    .data-table td {
+        padding: 12px 12px;
+        border-bottom: 1px solid var(--c-line);
+        text-align: left;
+        vertical-align: top;
+        color: var(--c-text);
+    }
+    .data-table th {
+        background: var(--c-surface);
+        color: var(--c-muted);
+        font-size: 11.5px;
+        font-weight: 800;
+        letter-spacing: .8px;
+        text-transform: uppercase;
+        white-space: nowrap;
+    }
+    .data-table tbody tr:last-child td { border-bottom: none; }
+    .data-table tbody tr:hover td { background: var(--c-surface); }
+    .data-table td.num {
+        text-align: center;
+        white-space: nowrap;
+        color: var(--c-muted);
+        font-weight: 700;
+    }
+    .question-cell { min-width: 280px; max-width: 460px; }
+    .question-cell p { line-height: 1.5; }
+    .question-cell small { color: var(--c-muted); }
+
+    /* ---------------------------------------------------- row actions */
+    .row-actions {
+        display: flex;
+        gap: 6px;
+        flex-wrap: wrap;
+        white-space: nowrap;
+    }
+    .row-actions a,
+    .row-actions button {
+        display: inline-block;
+        padding: 7px 12px;
+        border: 1px solid var(--c-line);
+        border-radius: 10px;
+        font-size: 12.5px;
+        font-weight: 800;
+        text-decoration: none;
+        cursor: pointer;
+        background: var(--c-surface);
+        color: var(--c-text);
+        transition: .18s;
+    }
+    .row-actions a:hover,
+    .row-actions button:hover { border-color: var(--c-brand); color: var(--c-brand); }
+    .row-actions .act-edit {
+        background: var(--c-brand-soft);
+        border-color: transparent;
+        color: var(--c-brand);
+    }
+    .row-actions .act-danger {
+        background: var(--c-danger-soft);
+        border-color: transparent;
+        color: var(--c-danger);
+    }
+
+    /* ---------------------------------------------------- admin form */
+    .admin-form { margin-top: 6px; }
+    .admin-form label {
+        display: block;
+        font-size: 13.5px;
+        font-weight: 800;
+        margin: 16px 0 7px;
+        color: var(--c-text);
+    }
+    .admin-form label small { font-weight: 600; color: var(--c-muted); }
+
+    .admin-form input[type=text],
+    .admin-form input[type=number],
+    .admin-form textarea,
+    .admin-form select {
+        width: 100%;
+        padding: 12px 14px;
+        border: 1.5px solid var(--c-line);
+        border-radius: 12px;
+        background: var(--c-card);
+        color: var(--c-text);
+        font-size: 14.5px;
+        outline: none;
+        transition: .18s;
+    }
+    .admin-form textarea { min-height: 92px; resize: vertical; line-height: 1.6; }
+    .admin-form input:focus,
+    .admin-form textarea:focus,
+    .admin-form select:focus {
+        border-color: var(--c-brand);
+        box-shadow: 0 0 0 4px var(--c-brand-soft);
+    }
+
+    .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 0 16px;
+    }
+    .form-grid > div { min-width: 0; }
+
+    .option-editor {
+        border: 1.5px solid var(--c-line);
+        border-radius: 16px;
+        padding: 14px;
+        margin-top: 4px;
+        background: var(--c-surface);
+    }
+
+    .option-row {
+        display: flex;
+        gap: 8px;
+        align-items: center;
+        flex-wrap: wrap;
+        margin-bottom: 9px;
+    }
+    .option-row input[type=text] {
+        flex: 1 1 260px;
+        min-width: 200px;
+        padding: 11px 13px;
+        border: 1.5px solid var(--c-line);
+        border-radius: 11px;
+        font-size: 14px;
+        background: var(--c-card);
+        color: var(--c-text);
+        outline: none;
+    }
+    .option-row input[type=text]:focus { border-color: var(--c-brand); }
+    .option-row select {
+        flex: 0 0 96px;
+        padding: 11px 10px;
+        border: 1.5px solid var(--c-line);
+        border-radius: 11px;
+        font-size: 14px;
+        background: var(--c-card);
+        color: var(--c-text);
+        outline: none;
+    }
+    .option-row .key-check {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+        margin: 0;
+        font-size: 12.5px;
+        font-weight: 800;
+        color: var(--c-muted);
+        white-space: nowrap;
+        cursor: pointer;
+    }
+    .option-row .remove-option {
+        width: 36px; height: 36px;
+        border: none;
+        border-radius: 11px;
+        background: var(--c-danger-soft);
+        color: var(--c-danger);
+        font-size: 17px;
+        font-weight: 800;
+        cursor: pointer;
+    }
+    .option-row .remove-option:hover { filter: brightness(.95); }
+
+    .form-actions {
+        display: flex;
+        gap: 12px;
+        flex-wrap: wrap;
+        margin-top: 24px;
+    }
+    .form-actions .btn { padding: 13px 26px; }
+
+    /* ------------------------------------------------------- progress */
+    .progress-area {
+        background: var(--c-card);
+        border-bottom: 1px solid var(--c-line);
+        padding: 15px 0 17px;
+    }
+
+    .progress-top {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--c-muted);
+        margin-bottom: 9px;
+    }
+
+    .progress-percent {
+        background: var(--c-brand-soft);
+        color: var(--c-brand);
+        font-size: 12px;
+        font-weight: 800;
+        padding: 4px 12px;
+        border-radius: 999px;
+    }
+
+    .progress {
+        height: 8px;
+        background: var(--c-surface);
+        border: 1px solid var(--c-line);
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .progress-bar {
+        height: 100%;
+        background: var(--grad-brand);
+        border-radius: 20px;
+        transition: width .35s ease;
+    }
+
+    /* ----------------------------------------------- exam container */
+    .exam-container {
+        width: min(980px, 92%);
+        margin: 34px auto;
+        display: grid;
+        gap: 22px;
+    }
+
+    .question-card {
+        background: var(--c-card);
+        border: 1px solid var(--c-line);
+        border-radius: 26px;
+        padding: 40px 42px;
+        box-shadow: var(--sh-soft);
+    }
+
+    .question-type {
+        display: block;
+        color: var(--c-brand2);
+        font-size: 12px;
+        font-weight: 800;
+        letter-spacing: 1.6px;
+        text-transform: uppercase;
+        margin-bottom: 14px;
+    }
+
+    .question-number {
+        font-size: 13px;
+        font-weight: 700;
+        color: var(--c-muted);
+        margin-bottom: 12px;
+    }
+
+    .question-text {
+        font-size: 21px;
+        font-weight: 600;
+        line-height: 1.65;
+        color: var(--c-text);
+        margin-bottom: 10px;
+    }
+
+    .question-hint {
+        display: flex;
+        align-items: center;
+        gap: 9px;
+        font-size: 13.5px;
+        color: var(--c-muted);
+        margin-bottom: 26px;
+    }
+    .question-hint:before {
+        content: "";
+        width: 7px; height: 7px;
+        border-radius: 50%;
+        background: var(--c-brand2);
+        flex: none;
+    }
+
+    /* -------------------------------------------------- opsi jawaban */
+    .option-list { display: grid; gap: 10px; }
+
+    .option {
+        display: flex;
+        align-items: center;
+        gap: 12px;
+        padding: 12px 16px;
+        border: 1.5px solid var(--c-line);
+        border-radius: 14px;
+        cursor: pointer;
+        transition: border-color .18s, background .18s, transform .18s, box-shadow .18s;
+        font-size: 15px;
+        line-height: 1.5;
+        background: var(--c-card);
+        color: var(--c-text);
+        user-select: none;
+    }
+    .option:hover {
+        border-color: var(--c-brand);
+        background: var(--c-brand-soft);
+        transform: translateY(-2px);
+        box-shadow: 0 10px 22px rgba(40, 40, 80, .07);
+    }
+    .option:focus-visible { outline: 3px solid var(--c-brand); outline-offset: 2px; }
+    .option.selected {
+        border-color: var(--c-brand);
+        background: var(--c-brand-soft);
+        box-shadow: 0 10px 24px rgba(91, 91, 214, .13);
+        font-weight: 600;
+    }
+
+    .option-label { flex: 1; }
+
+    .option-circle {
+        width: 22px; height: 22px;
+        border: 2px solid var(--c-line);
+        border-radius: 50%;
+        flex: none;
+        position: relative;
+        transition: .18s;
+        background: var(--c-card);
+    }
+    .option:hover .option-circle { border-color: var(--c-brand); }
+    .option.selected .option-circle {
+        border-color: var(--c-brand);
+        background: var(--c-brand);
+        box-shadow: inset 0 0 0 4px var(--c-card);
+    }
+
+    .option.checkbox-option .option-circle { border-radius: 7px; }
+    .option.checkbox-option.selected .option-circle { box-shadow: none; }
+    .option.checkbox-option.selected .option-circle:after {
+        content: "\2713";
+        position: absolute;
+        top: 0; left: 0;
+        width: 100%; height: 100%;
+        display: flex; align-items: center; justify-content: center;
+        color: #fff;
+        font-size: 14px;
+        font-weight: 700;
+        line-height: 1;
+    }
+
+    .option.scale-choice { border-left: 4px solid var(--c-brand2-soft); }
+    .option.scale-choice.selected { border-left-color: var(--c-brand2); }
+
+    /* ------------------------------------------------------- dropdown */
+    .select-wrap { display: block; position: relative; }
+
+    .question-select {
+        width: 100%;
+        padding: 17px 46px 17px 18px;
+        border: 1.5px solid var(--c-line);
+        border-radius: 16px;
+        background: var(--c-card);
+        color: var(--c-text);
+        font-size: 15.5px;
+        cursor: pointer;
+        transition: border-color .18s, box-shadow .18s;
+        appearance: none;
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='9' viewBox='0 0 14 9'%3E%3Cpath fill='%23777b8e' d='M1 1l6 6 6-6'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 18px center;
+    }
+    .question-select:hover { border-color: var(--c-brand); }
+    .question-select:focus {
+        outline: none;
+        border-color: var(--c-brand);
+        box-shadow: 0 0 0 4px var(--c-brand-soft);
+    }
+    .question-select option { background: var(--c-card); color: var(--c-text); }
+    .select-wrap.answered .question-select {
+        border-color: var(--c-brand);
+        background-color: var(--c-brand-soft);
+        font-weight: 600;
+    }
+
+    /* ---------------------------------------------------- navigasi */
+    .navigation {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 12px;
+        margin-top: 34px;
+        padding-top: 26px;
+        border-top: 1px dashed var(--c-line);
+        flex-wrap: wrap;
+    }
+    .navigation-right { display: flex; gap: 12px; flex-wrap: wrap; }
+    .navigation .btn { width: auto; }
+
+    /* ------------------------------------------ kartu nav nomor soal */
+    .qnav-card {
+        background: var(--c-card);
+        border: 1px solid var(--c-line);
+        border-radius: 22px;
+        padding: 20px 22px;
+        box-shadow: var(--sh-lift);
+    }
+
+    .qnav-head {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 14px;
+        flex-wrap: wrap;
+        margin-bottom: 16px;
+    }
+
+    .qnav-title { font-size: 14px; font-weight: 800; color: var(--c-text); }
+
+    .qnav-legend {
+        display: flex;
+        gap: 16px;
+        flex-wrap: wrap;
+        font-size: 12px;
+        font-weight: 600;
+        color: var(--c-muted);
+    }
+
+    .legend-item { display: inline-flex; align-items: center; gap: 7px; }
+
+    .legend-dot {
+        width: 12px; height: 12px;
+        border-radius: 4px;
+        border: 1.5px solid var(--c-line);
+        background: var(--c-card);
+        display: inline-block;
+    }
+    .legend-dot.answered {
+        background: var(--c-brand-soft);
+        border-color: var(--c-brand);
+    }
+    .legend-dot.active {
+        background: var(--grad-brand);
+        border-color: transparent;
+    }
+
+    .question-nav {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(44px, 1fr));
+        gap: 10px;
+    }
+
+    .nav-btn {
+        height: 44px;
+        border-radius: 12px;
+        border: 1.5px solid var(--c-line);
+        background: var(--c-card);
+        color: var(--c-muted);
+        font-size: 13.5px;
+        font-weight: 700;
+        font-variant-numeric: tabular-nums;
+        cursor: pointer;
+        transition: .16s;
+    }
+    .nav-btn:hover {
+        border-color: var(--c-brand);
+        color: var(--c-brand);
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(40, 40, 80, .09);
+    }
+    .nav-btn.answered {
+        background: var(--c-brand-soft);
+        border-color: var(--c-brand);
+        color: var(--c-brand);
+    }
+    .nav-btn.active {
+        background: var(--grad-brand);
+        border-color: transparent;
+        color: #fff;
+        box-shadow: var(--sh-brand);
+        transform: translateY(-2px);
+    }
+
+    /* -------------------------------------------------------- hasil */
+    .result-screen { padding: 46px 0; }
+
+    .result-header { margin-bottom: 20px; }
+    .result-header h1 { font-size: 32px; font-weight: 800; margin-bottom: 6px; }
+    .result-header p { color: var(--c-muted); font-weight: 600; }
+
+    .disclaimer {
+        background: var(--c-warning-soft);
+        border: 1px solid var(--c-warning);
+        color: var(--c-warning);
+        border-radius: 16px;
+        padding: 16px 18px;
+        font-size: 13.5px;
+        line-height: 1.7;
+        margin-bottom: 24px;
+    }
+    .disclaimer strong { color: inherit; }
+
+    .personality-card {
+        display: flex;
+        gap: 34px;
+        align-items: center;
+        background: var(--grad-panel);
+        color: #fff;
+        border-radius: 28px;
+        padding: 36px;
+        margin-bottom: 26px;
+        box-shadow: var(--sh-soft);
+    }
+
+    .type-code {
+        font-size: 52px;
+        font-weight: 900;
+        letter-spacing: 3px;
+        line-height: 1;
+    }
+    .type-label { font-size: 14px; opacity: .85; margin-top: 8px; }
+    .personality-card h2 { font-size: 24px; font-weight: 800; margin-bottom: 10px; }
+    .personality-card p { font-size: 15px; line-height: 1.7; opacity: .92; }
+
+    .dimension-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 16px;
+        margin-bottom: 26px;
+    }
+
+    .dimension {
+        background: var(--c-card);
+        border: 1px solid var(--c-line);
+        border-radius: 20px;
+        padding: 20px;
+        box-shadow: var(--sh-lift);
+    }
+
+    .dimension-name {
+        font-size: 11.5px;
+        font-weight: 800;
+        letter-spacing: 1.2px;
+        color: var(--c-muted);
+        margin-bottom: 8px;
+    }
+
+    .dimension-value {
+        font-size: 16px;
+        font-weight: 800;
+        color: var(--c-brand);
+        margin-bottom: 12px;
+    }
+
+    .dimension-bar,
+    .skill-bar {
+        height: 9px;
+        background: var(--c-surface);
+        border: 1px solid var(--c-line);
+        border-radius: 20px;
+        overflow: hidden;
+    }
+
+    .dimension-fill,
+    .skill-fill {
+        height: 100%;
+        background: var(--grad-brand);
+        border-radius: 20px;
+        transition: width .8s ease;
+    }
+
+    .result-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 16px;
+    }
+
+    .result-card {
+        background: var(--c-card);
+        border: 1px solid var(--c-line);
+        border-radius: 22px;
+        padding: 26px;
+        box-shadow: var(--sh-lift);
+    }
+    .result-card h3 { font-size: 17px; font-weight: 800; margin-bottom: 20px; }
+    .result-card > p { color: var(--c-muted); line-height: 1.8; }
+
+    .skill { margin-bottom: 18px; }
+
+    .skill-top {
+        display: flex;
+        justify-content: space-between;
+        font-size: 14px;
+        font-weight: 700;
+        margin-bottom: 8px;
+    }
+
+    .radar-box { position: relative; height: 300px; }
+
+    /* kelebihan / pengembangan */
+    .pros-cons {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+        gap: 16px;
+    }
+    .pros, .cons {
+        border: 1px solid var(--c-line);
+        border-radius: 18px;
+        padding: 18px 20px;
+        background: var(--c-surface);
+    }
+    .pros h4, .cons h4 {
+        font-size: 14.5px;
+        font-weight: 800;
+        margin-bottom: 12px;
+        letter-spacing: .2px;
+    }
+    .pros h4 { color: var(--c-success); }
+    .cons h4 { color: var(--c-warning); }
+    .pros ul, .cons ul {
+        margin: 0;
+        padding-left: 18px;
+        color: var(--c-muted);
+        font-size: 14.5px;
+        line-height: 1.9;
+    }
+
+    .development {
+        color: var(--c-muted);
+        font-size: 15px;
+        line-height: 1.9;
+        white-space: pre-line;
+    }
+
+    /* saran personal / rencana aksi */
+    .saran-sub {
+        color: var(--c-muted);
+        font-size: 14.5px;
+        line-height: 1.8;
+        margin: -8px 0 18px;
+    }
+
+
+    .saran-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+        gap: 16px;
+    }
+    .saran-item {
+        display: flex;
+        flex-direction: column;
+        background: var(--c-surface);
+        border: 1px solid var(--c-line);
+        border-radius: 18px;
+        padding: 20px;
+    }
+    .saran-tag {
+        align-self: flex-start;
+        font-size: 11px;
+        font-weight: 800;
+        letter-spacing: .1em;
+        text-transform: uppercase;
+        color: var(--c-brand);
+        background: var(--c-brand-soft);
+        border: 1px solid var(--c-line);
+        border-radius: 999px;
+        padding: 5px 11px;
+        margin-bottom: 12px;
+    }
+    .saran-item h4 {
+        font-size: 16.5px;
+        font-weight: 800;
+        margin-bottom: 10px;
+    }
+    .saran-steps {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+        counter-reset: step;
+        flex: 1;
+    }
+    .saran-steps li {
+        counter-increment: step;
+        position: relative;
+        padding-left: 34px;
+        margin-bottom: 12px;
+        font-size: 14.5px;
+        line-height: 1.7;
+    }
+    .saran-steps li:last-child { margin-bottom: 0; }
+    .saran-steps li::before {
+        content: counter(step);
+        position: absolute;
+        left: 0;
+        top: 1px;
+        width: 22px;
+        height: 22px;
+        border-radius: 50%;
+        background: var(--grad-brand);
+        color: #fff;
+        font-size: 12px;
+        font-weight: 800;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .result-actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        margin-top: 24px;
+    }
+    .result-actions .btn { width: auto; }
+
+    /* Hanya muncul saat mencetak (identitas peserta di kertas hasil) */
+    .print-only { display: none; }
+}
+
+/* =====================================================================
+   3. RESPONSIVE
+   Ikut di dalam @layer components supaya utility Tailwind selalu
+   bisa menimpanya (output: base -> components -> utilities).
+   ===================================================================== */
+
+@layer components {
+
+@media (max-width: 900px) {
+    .login-wrapper { grid-template-columns: 1fr; }
+    .login-info, .login-form { padding: 36px; }
+    .login-info h1 { font-size: 30px; }
+    .personality-card { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .question-card { padding: 30px 24px; }
+    .exam-container { width: 94%; margin-top: 24px; }
+    .question-text { font-size: 18px; }
+    .exam-logo { display: none; }
+    .qnav-card { padding: 16px 14px; }
+    .question-nav { grid-template-columns: repeat(auto-fill, minmax(40px, 1fr)); gap: 8px; }
+    .nav-btn { height: 40px; font-size: 13px; }
+    .qnav-legend { display: none; }
+    .instruction-card { padding: 32px 26px; }
+    .instruction-card h1 { font-size: 26px; }
+    .result-header h1 { font-size: 26px; }
+}
+
+@media (max-width: 768px) {
+    .exam-header-inner { gap: 10px; }
+    .exam-user { max-width: 180px; }
+    .timer { font-size: 18px; padding: 10px 18px; }
+}
+
+@media (max-width: 700px) {
+    .header-btn { padding: 0; width: 46px; }
+    .header-btn .btn-label { display: none; }
+    .exam-note { width: 46px; max-width: 46px; padding: 0; justify-content: center; }
+    .exam-note .exam-note-text { display: none; }
+    .clock-pill .clock-text { display: none; }
+    .clock-pill { padding: 0 11px; }
+}
+
+@media (max-width: 640px) {
+    .login-screen { padding: 16px 12px; align-items: flex-start; }
+    .login-info, .login-form { padding: 26px 20px; }
+    .login-info h1 { font-size: 27px; }
+    .clock-pill { font-size: 12px; padding: 0 11px; height: 36px; }
+    .navigation { flex-direction: column-reverse; align-items: stretch; }
+    .navigation-right { flex-direction: column; width: 100%; }
+    .navigation .btn { width: 100%; }
+    .timer { font-size: 17px; padding: 9px 16px; letter-spacing: 1px; }
+    .exam-title { font-size: 15px; }
+    .btn { padding: 13px 20px; font-size: 14px; border-radius: 12px; }
+    .result-actions .btn { width: 100%; }
+}
+
+@media (max-width: 480px) {
+    .container { width: 94%; }
+
+    .exam-header-inner { flex-wrap: wrap; gap: 8px; padding: 12px 0; }
+    .admin-nav { gap: 4px; font-size: 13px; }
+    .admin-nav a { padding: 7px 10px; }
+
+    .exam-brand { gap: 8px; }
+    .exam-title { font-size: 14px; }
+    .exam-user { font-size: 11.5px; max-width: 120px; }
+    .exam-actions { gap: 8px; }
+    .timer { font-size: 16px; padding: 8px 14px; letter-spacing: 1px; border-radius: 12px; }
+
+    .exam-container { width: 96%; margin-top: 18px; gap: 16px; }
+    .question-card { padding: 22px 18px; border-radius: 20px; }
+    .question-text { font-size: 17px; line-height: 1.55; }
+    .question-hint { font-size: 12.5px; margin-bottom: 20px; }
+    .question-type { font-size: 11px; margin-bottom: 10px; }
+    .question-number { font-size: 12px; margin-bottom: 8px; }
+
+    .option-list { gap: 10px; }
+    .option { padding: 14px 15px; gap: 12px; font-size: 14.5px; border-radius: 14px; }
+    .option-circle { width: 20px; height: 20px; }
+    .question-select { padding: 15px 42px 15px 15px; font-size: 14.5px; }
+
+    .navigation { margin-top: 24px; padding-top: 20px; gap: 10px; }
+    .navigation-right { gap: 10px; }
+    .navigation .btn { padding: 13px 18px; font-size: 14px; }
+
+    .qnav-card { padding: 14px 12px; border-radius: 18px; }
+    .question-nav { grid-template-columns: repeat(auto-fill, minmax(38px, 1fr)); gap: 7px; }
+    .nav-btn { height: 38px; font-size: 12.5px; border-radius: 10px; }
+
+    .progress-area { padding: 12px 0 14px; }
+    .progress-top { font-size: 12px; }
+    .progress-percent { font-size: 11px; padding: 3px 10px; }
+
+    .result-screen { padding: 28px 0; }
+    .result-header h1 { font-size: 24px; }
+    .result-header p { font-size: 13px; word-break: break-word; }
+    .disclaimer { padding: 14px 15px; font-size: 12.5px; border-radius: 14px; }
+    .personality-card { padding: 24px 20px; border-radius: 22px; gap: 14px; }
+    .type-code { font-size: 40px; letter-spacing: 2px; }
+    .personality-card h2 { font-size: 20px; }
+    .personality-card p { font-size: 13.5px; }
+    .dimension-grid { grid-template-columns: 1fr; gap: 12px; }
+    .dimension { padding: 16px; border-radius: 16px; }
+    .result-grid { grid-template-columns: 1fr; gap: 12px; }
+    .result-card { padding: 20px 16px; border-radius: 18px; }
+    .result-card h3 { font-size: 15.5px; margin-bottom: 14px; }
+    .saran-grid { grid-template-columns: 1fr; gap: 12px; }
+    .saran-item { padding: 18px 16px; }
+    .saran-steps li { font-size: 14px; }
+    .radar-box { height: 260px; }
+    .result-actions { flex-direction: column; }
+    .result-actions .btn { width: 100%; }
+
+    .instruction-card { padding: 24px 18px; }
+    .info-grid { grid-template-columns: 1fr; gap: 12px; }
+    .instruction-card .btn { width: 100%; padding: 14px 20px; }
+
+    .form-actions .btn { width: 100%; }
+    .filter-bar .btn { width: 100%; }
+}
+
+@media (max-width: 360px) {
+    .exam-user { display: none; }
+    .timer { font-size: 15px; padding: 7px 12px; }
+    .question-text { font-size: 16px; }
+    .option { padding: 13px 13px; gap: 10px; font-size: 14px; }
+    .navigation .btn { padding: 12px 14px; font-size: 13.5px; }
+    .question-nav { grid-template-columns: repeat(auto-fill, minmax(34px, 1fr)); gap: 6px; }
+    .nav-btn { height: 34px; font-size: 12px; }
+    .clock-pill { font-size: 11px; padding: 0 9px; gap: 6px; }
+}
+
+} /* end @layer components (responsive) */
+
+/* =====================================================================
+   4. CETAK (print) - halaman hasil
+   ===================================================================== */
+@media print {
+    /* Palet dipaksa terang supaya hasil tetap terbaca di kertas,
+       meskipun pengguna sedang mode gelap. */
+    :root, .dark {
+        --c-bg: #ffffff;
+        --c-card: #ffffff;
+        --c-surface: #f7f7ff;
+        --c-text: #1a1a3c;
+        --c-muted: #4b4f70;
+        --c-line: #d9dbeb;
+        --c-brand: #4b4bd0;
+        --c-brand2: #7b46e6;
+        --c-brand-soft: rgba(91, 91, 214, .10);
+        --c-warning: #8a5a00;
+        --c-warning-soft: rgba(240, 180, 60, .18);
+        --sh-lift: none;
+        --sh-soft: none;
+    }
+
+    .exam-header, .progress-area, .result-actions, #themeToggle { display: none !important; }
+    .print-only { display: block !important; }
+    body { background: #fff; }
+    .result-card, .dimension, .question-card,
+    .saran-item, .pros, .cons { box-shadow: none; break-inside: avoid; }
+    .saran-grid { grid-template-columns: 1fr; }
+}

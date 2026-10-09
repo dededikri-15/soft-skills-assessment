@@ -63,26 +63,14 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     exit;
 }
 ?>
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hapus Soal - Admin</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
-</head>
-<body>
-    <header class="exam-header">
-        <div class="container exam-header-inner">
-            <div><div class="exam-title">Admin Panel</div><div class="exam-user">Hapus Soal #<?= (int) $id ?></div></div>
-            <nav class="admin-nav">
-                <a href="dashboard.php">Dashboard</a>
-                <a href="bank_soal.php">Bank Soal</a>
-                <a href="token.php">Token</a>
-                <a href="hasil.php">Hasil</a>
-            </nav>
-        </div>
-    </header>
+<?php
+$pageTitle = 'Hapus Soal - Admin';
+require __DIR__ . '/../assets/partials/head.php';
+
+$adminSubtitle = 'Hapus Soal #' . (int) $id;
+$adminActive = 'bank_soal';
+require __DIR__ . '/../assets/partials/header_admin.php';
+?>
 
     <main class="exam-container">
         <div class="question-card">
@@ -125,5 +113,6 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             </div>
         </div>
     </main>
+<script src="../assets/js/ui.js?v=<?= (int) @filemtime(__DIR__ . '/../assets/js/ui.js') ?>"></script>
 </body>
 </html>

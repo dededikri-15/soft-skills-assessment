@@ -6,21 +6,14 @@
 session_start();
 // TODO: auth admin, INSERT token_ujian (kode, batas, masa berlaku)
 ?>
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Tambah Token - Admin</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
-</head>
-<body>
-    <header class="exam-header">
-        <div class="container exam-header-inner">
-            <div><div class="exam-title">Admin Panel</div><div class="exam-user">Tambah Token</div></div>
-            <nav class="admin-nav"><a href="token.php">Kembali ke Token</a></nav>
-        </div>
-    </header>
+<?php
+$pageTitle = 'Tambah Token - Admin';
+require __DIR__ . '/../assets/partials/head.php';
+
+$adminSubtitle = 'Tambah Token';
+$adminActive = 'token';
+require __DIR__ . '/../assets/partials/header_admin.php';
+?>
 
     <main class="exam-container">
         <div class="question-card">
@@ -34,5 +27,6 @@ session_start();
             </div>
         </div>
     </main>
+<script src="../assets/js/ui.js?v=<?= (int) @filemtime(__DIR__ . '/../assets/js/ui.js') ?>"></script>
 </body>
 </html>

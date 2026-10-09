@@ -256,121 +256,86 @@ $timerAwal  = sprintf('%02d:%02d', intdiv($sisaDetik, 60), $sisaDetik % 60);
 $pesertaNama = $_SESSION['peserta_nama'] ?? '';
 $pesertaNim = $_SESSION['peserta_nim'] ?? '';
 ?>
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Ujian - Soft Skills Assessment</title>
-    <script>
-    try {
-        var t = localStorage.getItem('theme');
-        if (t === 'dark' || (!t && window.matchMedia && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-            document.documentElement.classList.add('dark');
-        }
-    } catch (e) {}
-    </script>
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="../assets/css/tailwind.css">
-</head>
-<body>
 
-    <header class="exam-header">
-        <div class="container exam-header-inner">
-            <div class="exam-brand">
-                <div class="exam-logo">&#9998;</div>
-                <div>
-                    <div class="exam-title">Soft Skills Assessment</div>
-                    <div class="exam-user" id="examUser"><?= htmlspecialchars($pesertaNama . ' • ' . $pesertaNim, ENT_QUOTES, 'UTF-8') ?></div>
-                </div>
-            </div>
+<?php
+$pageTitle = 'Ujian - Soft Skills Assessment';
+require __DIR__ . '/../assets/partials/head.php';
 
-            <div class="exam-actions">
-                <div class="exam-note" id="acakInfo"
-                     title="Paket soal diacak otomatis untuk setiap peserta">
-                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M16 3h5v5"/><path d="M4 20 21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/>
-                    </svg>
-                    <span class="exam-note-text">Paket soal berbeda untuk tiap peserta</span>
-                </div>
-
-                <button type="button" id="themeToggle" class="header-btn header-btn-icon"
-                        aria-label="Ganti tema terang / gelap" aria-pressed="false" title="Mode terang / gelap">
-                    <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round">
-                        <circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/>
-                    </svg>
-                    <svg class="icon-moon hidden" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
-                        <path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8z"/>
-                    </svg>
-                </button>
-
-                <div class="timer" id="timer"><?= $timerAwal ?></div>
-            </div>
+$pesertaSubtitle = htmlspecialchars($pesertaNama, ENT_QUOTES, 'UTF-8')
+    . ' &bull; ' . htmlspecialchars($pesertaNim, ENT_QUOTES, 'UTF-8');
+$showClock = false;
+$headerExtra = '
+    <div class="exam-note" id="acakInfo" title="Paket soal diacak otomatis untuk setiap peserta">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M16 3h5v5"/><path d="M4 20 21 3"/><path d="M21 16v5h-5"/><path d="M15 15l6 6"/><path d="M4 4l5 5"/>
+        </svg>
+        <span class="exam-note-text">Paket soal berbeda untuk tiap peserta</span>
+    </div>';
+$headerRight = '<div class="timer" id="timer">' . $timerAwal . '</div>';
+require __DIR__ . '/../assets/partials/header_peserta.php';
+?>
+<div class="progress-area">
+    <div class="container">
+        <div class="progress-top">
+            <span id="progressText">Pertanyaan 1 dari <?= count($questionsData) ?></span>
+            <span class="progress-percent" id="progressPercent">1%</span>
         </div>
-    </header>
-
-    <div class="progress-area">
-        <div class="container">
-            <div class="progress-top">
-                <span id="progressText">Pertanyaan 1 dari <?= count($questionsData) ?></span>
-                <span class="progress-percent" id="progressPercent">1%</span>
-            </div>
-            <div class="progress">
-                <div class="progress-bar" id="progressBar" style="width:1%"></div>
-            </div>
+        <div class="progress">
+            <div class="progress-bar" id="progressBar" style="width:1%"></div>
         </div>
     </div>
+</div>
 
-    <main class="exam-container">
+<main class="exam-container">
 
-        <?php if (isset($_GET['acak'])): ?>
-        <div class="rounded-2xl border border-emerald-200 bg-emerald-50 px-5 py-3.5 text-sm font-semibold text-emerald-700 shadow-sm dark:border-emerald-800 dark:bg-emerald-900/40 dark:text-emerald-300"
-             role="status">
-            Paket soal baru sudah diacak ulang &mdash; soal dan urutan pilihan kini berbeda dengan peserta lain.
+    <?php if (isset($_GET['acak'])): ?>
+    <div class="notice success" role="status">
+        Paket soal baru sudah diacak ulang &mdash; soal dan urutan pilihan kini berbeda dengan peserta lain.
+    </div>
+    <?php endif; ?>
+
+    <section class="question-card">
+        <div class="question-type" id="questionType">-</div>
+        <div class="question-number" id="questionNumber">Pertanyaan 1</div>
+        <h2 class="question-text" id="questionText">Memuat soal...</h2>
+        <p class="question-hint" id="questionHint"></p>
+
+        <div class="option-list" id="optionList"></div>
+
+        <div class="navigation">
+            <button id="prevBtn" class="btn btn-secondary" type="button">&#8592; Sebelumnya</button>
+            <div class="navigation-right">
+                <button id="finishBtn" class="btn btn-finish" type="button">Selesaikan Tes &#10003;</button>
+                <button id="nextBtn" class="btn btn-next" type="button">Berikutnya &#8594;</button>
+            </div>
         </div>
-        <?php endif; ?>
+    </section>
 
-        <section class="question-card">
-            <div class="question-type" id="questionType">-</div>
-            <div class="question-number" id="questionNumber">Pertanyaan 1</div>
-            <h2 class="question-text" id="questionText">Memuat soal...</h2>
-            <p class="question-hint" id="questionHint"></p>
+    <section class="qnav-card">
+        <div class="qnav-head">
+            <span class="qnav-title">Navigasi Soal</span>
+            <span class="qnav-legend">
+                <span class="legend-item"><i class="legend-dot active"></i>Sedang dijawab</span>
+                <span class="legend-item"><i class="legend-dot answered"></i>Terjawab</span>
+                <span class="legend-item"><i class="legend-dot"></i>Belum dijawab</span>
+            </span>
+        </div>
+        <div class="question-nav" id="questionNav"></div>
+    </section>
 
-            <div class="option-list" id="optionList"></div>
+</main>
 
-            <div class="navigation">
-                <button id="prevBtn" class="btn btn-secondary" type="button">&#8592; Sebelumnya</button>
-                <div class="navigation-right">
-                    <button id="finishBtn" class="btn btn-finish" type="button">Selesaikan Tes &#10003;</button>
-                    <button id="nextBtn" class="btn btn-next" type="button">Berikutnya &#8594;</button>
-                </div>
-            </div>
-        </section>
-
-        <section class="qnav-card">
-            <div class="qnav-head">
-                <span class="qnav-title">Navigasi Soal</span>
-                <span class="qnav-legend">
-                    <span class="legend-item"><i class="legend-dot active"></i>Sedang dijawab</span>
-                    <span class="legend-item"><i class="legend-dot answered"></i>Terjawab</span>
-                    <span class="legend-item"><i class="legend-dot"></i>Belum dijawab</span>
-                </span>
-            </div>
-            <div class="question-nav" id="questionNav"></div>
-        </section>
-
-    </main>
-
-    <script>
-    window.ExamConfig = <?= json_encode([
-        'totalQuestions'   => count($questionsData),
-        'durationMinutes'  => (int) EXAM_DURATION_MINUTES,
-        'serverEndTime'    => $batasWaktu,
-        'remainingSeconds' => $sisaDetik,
-        'questions'        => $questionsData,
-        'existingAnswers'  => $existingAnswers,
-    ], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP) ?>;
-    </script>
-    <script src="../assets/js/app.js"></script>
+<script>
+window.ExamConfig = <?= json_encode([
+    'totalQuestions'   => count($questionsData),
+    'durationMinutes'  => (int) EXAM_DURATION_MINUTES,
+    'serverEndTime'    => $batasWaktu,
+    'remainingSeconds' => $sisaDetik,
+    'questions'        => $questionsData,
+    'existingAnswers'  => $existingAnswers,
+], JSON_UNESCAPED_UNICODE | JSON_HEX_TAG | JSON_HEX_AMP) ?>;
+</script>
+<script src="../assets/js/ui.js?v=<?= (int) @filemtime(__DIR__ . '/../assets/js/ui.js') ?>"></script>
+<script src="../assets/js/app.js?v=<?= (int) @filemtime(__DIR__ . '/../assets/js/app.js') ?>"></script>
 </body>
 </html>

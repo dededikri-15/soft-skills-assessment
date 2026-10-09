@@ -6,26 +6,14 @@
 session_start();
 // TODO: auth admin, SELECT hasil_ujian + peserta + tipe_profil
 ?>
-<!DOCTYPE html>
-<html lang="id">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hasil Ujian - Admin</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
-</head>
-<body>
-    <header class="exam-header">
-        <div class="container exam-header-inner">
-            <div><div class="exam-title">Admin Panel</div><div class="exam-user">Hasil Ujian</div></div>
-            <nav class="admin-nav">
-                <a href="dashboard.php">Dashboard</a>
-                <a href="bank_soal.php">Bank Soal</a>
-                <a href="token.php">Token</a>
-                <a href="hasil.php">Hasil</a>
-            </nav>
-        </div>
-    </header>
+<?php
+$pageTitle = 'Hasil Ujian - Admin';
+require __DIR__ . '/../assets/partials/head.php';
+
+$adminSubtitle = 'Hasil Ujian';
+$adminActive = 'hasil';
+require __DIR__ . '/../assets/partials/header_admin.php';
+?>
 
     <main class="exam-container">
         <div class="question-card">
@@ -36,5 +24,6 @@ session_start();
             </div>
         </div>
     </main>
+<script src="../assets/js/ui.js?v=<?= (int) @filemtime(__DIR__ . '/../assets/js/ui.js') ?>"></script>
 </body>
 </html>
