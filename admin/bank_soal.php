@@ -154,7 +154,7 @@ if ($mode === 'daftar') {
             FROM bank_soal s
             JOIN dimensi d ON d.id = s.dimensi_id"
          . ($where ? ' WHERE ' . implode(' AND ', $where) : '')
-         . ' ORDER BY s.id LIMIT 500';
+         . ' ORDER BY s.id LIMIT 1000';
 
     $stmt = $db->prepare($sql);
     $stmt->execute($params);
@@ -632,7 +632,7 @@ require __DIR__ . '/../assets/partials/header_admin.php';
             </div>
 
             <p style="margin-top:12px;color:var(--muted);font-size:13.5px;">
-                Menampilkan <?= count($rows) ?> soal<?= count($rows) === 500 ? ' (batas tampilan 500, gunakan filter untuk mempersempit)' : '' ?>.
+                Menampilkan <?= count($rows) ?> soal<?= count($rows) === 1000 ? ' (batas tampilan 1000, gunakan filter untuk mempersempit)' : '' ?>.
                 Ujian mengambil soal <strong>aktif</strong> secara acak, maksimal
                 <?= (int) EXAM_QUESTION_COUNT ?> soal unik per sesi.
             </p>

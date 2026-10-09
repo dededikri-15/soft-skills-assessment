@@ -159,7 +159,7 @@ Agar jumlah file tidak meledak, tiap file menangani beberapa layar lewat query s
 
 | File | Fungsi |
 |---|---|
-| `database.sql` | Satu file untuk semua: skema 10 tabel + data awal (1 akun admin, 4 dimensi, 5 kategori soal, 16 tipe profil, 5 token demo, dan 175 baris `bank_soal` / 170 soal aktif). |
+| `database.sql` | Satu file untuk semua: skema 10 tabel + data awal (1 akun admin, 4 dimensi, 5 kategori soal, 16 tipe profil, 5 token demo, dan 505 baris `bank_soal` / 500 soal aktif). |
 
 ---
 
@@ -190,7 +190,7 @@ Jalankan **satu file saja**: `database/database.sql` — misalnya lewat phpMyAdm
 "C:/laragon/bin/mysql/mysql-8.4.3-winx64/bin/mysql.exe" -P 3307 -u root softskill < database/database.sql
 ```
 
-File ini membuat seluruh tabel sekaligus mengisinya: 1 akun admin, 4 dimensi, 5 kategori soal, 16 tipe profil, 5 token demo (pemakaian 0), dan **175 baris bank soal (170 soal aktif)**. Perintahnya untuk database baru — file ini sengaja tidak memuat `DROP TABLE` agar tidak menghapus data yang sudah ada.
+File ini membuat seluruh tabel sekaligus mengisinya: 1 akun admin, 4 dimensi, 5 kategori soal, 16 tipe profil, 5 token demo (pemakaian 0), dan **505 baris bank soal (500 soal aktif)**. Perintahnya untuk database baru — file ini sengaja tidak memuat `DROP TABLE` agar tidak menghapus data yang sudah ada.
 
 Token demo: `EQ2026A`–`EQ2026D` (aktif) dan `EQ2026X` (nonaktif, untuk uji validasi).
 
@@ -214,7 +214,7 @@ Tipe jawaban yang tersedia:
 - `checkbox` — memilih lebih dari satu jawaban.
 - `scale` — penilaian menggunakan skala 1–5.
 
-Setiap peserta mendapatkan paket berisi 60 soal yang diacak saat sesi ujian dimulai. Karena tersedia 170 soal aktif, paket yang diterima tiap peserta berbeda — rata-rata hanya sekitar 20 soal yang sama antar peserta. Urutan soal tersimpan selama sesi berlangsung sehingga tidak berubah ketika halaman dimuat ulang.
+Setiap peserta mendapatkan paket berisi 60 soal yang diacak saat sesi ujian dimulai. Karena tersedia 500 soal aktif, paket yang diterima tiap peserta berbeda — rata-rata hanya sekitar 7 soal yang sama antar peserta. Urutan soal tersimpan selama sesi berlangsung sehingga tidak berubah ketika halaman dimuat ulang.
 
 Admin dapat menambah, mengedit, mengaktifkan, menonaktifkan, dan menghapus soal melalui halaman pengelolaan bank soal.
 
