@@ -80,9 +80,7 @@ soft-skills-assessment/
 │   ├── input.css
 │   └── build.bat
 └── database/
-    ├── database.sql
-    ├── seed_soal.sql
-    └── migrasi_bank_soal.sql
+    └── database.sql
 ```
 
 *Catatan: Struktur di atas merupakan gambaran direktori utama aplikasi.*
@@ -157,13 +155,11 @@ Agar jumlah file tidak meledak, tiap file menangani beberapa layar lewat query s
 | `tailwind.config.js` | Palet warna dan daftar file yang di-scan. |
 | `build.bat` | Menjalankan build Tailwind dalam satu klik. |
 
-**`database/` — berkas SQL**
+**`database/` — berkas SQL (satu file saja)**
 
 | File | Fungsi |
 |---|---|
-| `database.sql` | Skema tabel awal. |
-| `seed_soal.sql` | 60 soal beserta pilihan jawabannya. |
-| `migrasi_bank_soal.sql` | Mengubah tabel `soal` menjadi `bank_soal`: memperbaiki pasangan soal–pilihan, mengganti nama kolom, dan menambah 3 soal checkbox. |
+| `database.sql` | Satu file untuk semua: skema 10 tabel + data awal (1 akun admin, 4 dimensi, 5 kategori soal, 16 tipe profil, 5 token demo, dan 175 baris `bank_soal` / 170 soal aktif). |
 
 ---
 
@@ -188,13 +184,15 @@ Tabel utama meliputi:
 
 Kredensial diatur di `config/database.php` (Laragon): host `localhost`, port `3307`, nama database `softskill`, user `root` tanpa password.
 
-Jalankan tiga berkas SQL di folder `database/` secara berurutan, misalnya lewat phpMyAdmin:
+Jalankan **satu file saja**: `database/database.sql` — misalnya lewat phpMyAdmin (tab Import) atau terminal:
 
-1. `database.sql` — membuat seluruh tabel.
-2. `seed_soal.sql` — mengisi 60 soal beserta pilihan jawabannya.
-3. `migrasi_bank_soal.sql` — mengubah tabel `soal` menjadi `bank_soal`, yaitu struktur yang dipakai aplikasi.
+```bash
+"C:/laragon/bin/mysql/mysql-8.4.3-winx64/bin/mysql.exe" -P 3307 -u root softskill < database/database.sql
+```
 
-Setelah itu siapkan admin dan token ujian melalui halaman login serta `admin/token.php`.
+File ini membuat seluruh tabel sekaligus mengisinya: 1 akun admin, 4 dimensi, 5 kategori soal, 16 tipe profil, 5 token demo (pemakaian 0), dan **175 baris bank soal (170 soal aktif)**. Perintahnya untuk database baru — file ini sengaja tidak memuat `DROP TABLE` agar tidak menghapus data yang sudah ada.
+
+Token demo: `EQ2026A`–`EQ2026D` (aktif) dan `EQ2026X` (nonaktif, untuk uji validasi).
 
 ---
 
@@ -216,7 +214,7 @@ Tipe jawaban yang tersedia:
 - `checkbox` — memilih lebih dari satu jawaban.
 - `scale` — penilaian menggunakan skala 1–5.
 
-Setiap peserta mendapatkan paket berisi 60 soal yang diacak saat sesi ujian dimulai. Urutan soal tersimpan selama sesi berlangsung sehingga tidak berubah ketika halaman dimuat ulang.
+Setiap peserta mendapatkan paket berisi 60 soal yang diacak saat sesi ujian dimulai. Karena tersedia 170 soal aktif, paket yang diterima tiap peserta berbeda — rata-rata hanya sekitar 20 soal yang sama antar peserta. Urutan soal tersimpan selama sesi berlangsung sehingga tidak berubah ketika halaman dimuat ulang.
 
 Admin dapat menambah, mengedit, mengaktifkan, menonaktifkan, dan menghapus soal melalui halaman pengelolaan bank soal.
 
